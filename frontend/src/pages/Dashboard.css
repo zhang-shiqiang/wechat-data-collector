@@ -1,0 +1,198 @@
+.dashboard-container {
+  width: 100%;
+}
+
+.dashboard-header {
+  margin-bottom: 24px;
+}
+
+.dashboard-title {
+  margin-bottom: 8px !important;
+  font-size: 28px !important;
+  font-weight: 700 !important;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
+}
+
+.dashboard-subtitle {
+  font-size: 14px;
+  color: var(--text-tertiary);
+  transition: color 0.3s ease;
+}
+
+.dashboard-stats {
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  border-radius: 16px;
+  box-shadow: 0 1px 3px var(--shadow-color);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  position: relative;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
+  border-color: rgba(102, 126, 234, 0.3);
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea 0%, #7c3aed 50%, #764ba2 100%);
+}
+
+.stat-icon-wrapper {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover .stat-icon-wrapper {
+  transform: scale(1.1);
+}
+
+.stat-icon {
+  font-size: 24px;
+}
+
+.stat-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.statistic-wrapper {
+  width: 100%;
+}
+
+.stat-title {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.stat-trend {
+  margin-top: 4px;
+}
+
+.dashboard-card {
+  border-radius: 16px;
+  box-shadow: 0 1px 3px var(--shadow-color);
+  min-height: 300px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  color: var(--text-tertiary);
+  transition: color 0.3s ease;
+}
+
+/* 暗色模式下的卡片优化 */
+[data-theme='dark'] .stat-card {
+  background: #1e293b;
+  border-color: #334155;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme='dark'] .stat-card:hover {
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+  border-color: rgba(102, 126, 234, 0.5);
+  background: #1e293b;
+  transform: translateY(-4px);
+}
+
+[data-theme='dark'] .stat-card::before {
+  background: linear-gradient(90deg, #667eea 0%, #7c3aed 50%, #764ba2 100%);
+  opacity: 1;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+}
+
+[data-theme='dark'] .stat-icon-wrapper {
+  background: rgba(102, 126, 234, 0.25) !important;
+  border: 1px solid rgba(102, 126, 234, 0.4);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+}
+
+[data-theme='dark'] .stat-icon {
+  filter: brightness(1.3) saturate(1.2);
+  color: #8b9aff !important;
+}
+
+[data-theme='dark'] .stat-title {
+  color: var(--text-secondary) !important;
+  opacity: 0.9;
+}
+
+/* 暗色模式下统计数字颜色优化 */
+[data-theme='dark'] .stat-card .ant-statistic-content {
+  color: #8b9aff !important;
+}
+
+[data-theme='dark'] .stat-card .ant-statistic-content-value {
+  color: #8b9aff !important;
+  text-shadow: 0 0 10px rgba(139, 154, 255, 0.3);
+}
+
+[data-theme='dark'] .stat-card .ant-statistic-content-value-int {
+  color: #8b9aff !important;
+}
+
+/* 暗色模式下趋势指示器优化 */
+[data-theme='dark'] .stat-trend .anticon {
+  filter: brightness(1.2);
+}
+
+[data-theme='dark'] .stat-trend .ant-typography {
+  color: #8b9aff !important;
+}
+
+[data-theme='dark'] .dashboard-card {
+  background: #1e293b;
+  border-color: #334155;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme='dark'] .dashboard-card:hover {
+  border-color: rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme='dark'] .dashboard-card .ant-typography {
+  color: var(--text-primary) !important;
+}
+
+[data-theme='dark'] .dashboard-card h4.ant-typography {
+  color: var(--text-primary) !important;
+  font-weight: 600;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .dashboard-title {
+    font-size: 24px !important;
+  }
+
+  .stat-card {
+    margin-bottom: 16px;
+  }
+}
+

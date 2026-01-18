@@ -1,0 +1,617 @@
+.app-layout {
+  min-height: 100vh;
+  background: #f5f7fa;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.app-sider {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 100;
+  box-shadow: 2px 0 8px 0 rgba(0, 0, 0, 0.15);
+  transition: width 0.2s, background 0.3s ease;
+  overflow: hidden;
+}
+
+/* 亮色模式下的侧边栏 - 使用柔和的浅色 */
+[data-theme='light'] .app-sider {
+  background: #f8fafc !important;
+  border-right: 1px solid #e2e8f0;
+  box-shadow: 2px 0 8px 0 rgba(0, 0, 0, 0.06);
+}
+
+/* 暗色模式下的侧边栏 */
+[data-theme='dark'] .app-sider {
+  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%) !important;
+  box-shadow: 2px 0 8px 0 rgba(0, 0, 0, 0.3);
+}
+
+.app-sider .ant-layout-sider-children {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 20px;
+  margin: 16px 12px;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  gap: 12px;
+}
+
+/* 折叠状态下的logo */
+.app-sider.ant-layout-sider-collapsed .logo {
+  justify-content: center;
+  padding: 0;
+  margin: 16px 8px;
+  width: calc(100% - 16px);
+}
+
+.app-sider.ant-layout-sider-collapsed .logo-icon {
+  margin: 0 auto;
+}
+
+/* 亮色模式下的logo */
+[data-theme='light'] .logo {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme='light'] .logo:hover {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* 暗色模式下的logo */
+[data-theme='dark'] .logo {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme='dark'] .logo:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.logo-icon {
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+/* 亮色模式下的logo图标 */
+[data-theme='light'] .logo-icon {
+  color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+  border: 1px solid rgba(102, 126, 234, 0.15);
+}
+
+/* 暗色模式下的logo图标 */
+[data-theme='dark'] .logo-icon {
+  color: #667eea;
+  background: rgba(102, 126, 234, 0.2);
+  border: 1px solid rgba(102, 126, 234, 0.3);
+}
+
+.logo-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.logo-text {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.3s ease;
+}
+
+.logo-subtitle {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.3s ease;
+}
+
+/* 亮色模式下的logo文字 */
+[data-theme='light'] .logo-text {
+  color: #1e293b;
+  text-shadow: none;
+}
+
+[data-theme='light'] .logo-subtitle {
+  color: #64748b;
+}
+
+/* 暗色模式下的logo文字 */
+[data-theme='dark'] .logo-text {
+  color: #ffffff;
+}
+
+[data-theme='dark'] .logo-subtitle {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.app-menu {
+  flex: 1;
+  background: transparent !important;
+  border: none;
+  padding: 8px 12px;
+}
+
+/* 折叠状态下菜单宽度为100% */
+.app-sider.ant-layout-sider-collapsed .ant-menu.ant-menu-inline-collapsed {
+  width: 100% !important;
+}
+
+/* 折叠状态下的菜单 */
+.app-sider.ant-layout-sider-collapsed .app-menu {
+  padding: 8px 0;
+}
+
+.app-sider.ant-layout-sider-collapsed .app-menu .ant-menu-item {
+  padding: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 4px 8px;
+  width: calc(100% - 16px);
+}
+
+/* 折叠状态下隐藏菜单文字 */
+.app-sider.ant-layout-sider-collapsed .app-menu .ant-menu-item .ant-menu-title-content {
+  display: none;
+}
+
+.app-menu .ant-menu-item {
+  height: 48px;
+  line-height: 48px;
+  margin: 4px 0;
+  border-radius: 10px;
+  padding-left: 20px !important;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  border: none !important;
+  outline: none !important;
+}
+
+/* 亮色模式下的菜单项 */
+[data-theme='light'] .app-menu .ant-menu-item {
+  color: #475569 !important;
+  background: transparent !important;
+}
+
+[data-theme='light'] .app-menu .ant-menu-item:hover {
+  background: #f1f5f9 !important;
+  color: #1e293b !important;
+}
+
+/* 暗色模式下的菜单项 */
+[data-theme='dark'] .app-menu .ant-menu-item {
+  color: rgba(255, 255, 255, 0.7) !important;
+  background: transparent !important;
+}
+
+[data-theme='dark'] .app-menu .ant-menu-item:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+}
+
+.app-menu .ant-menu-item-selected::after {
+  display: none;
+}
+
+/* 移除所有边框和轮廓 */
+.app-menu .ant-menu-item,
+.app-menu .ant-menu-item-selected,
+.app-menu .ant-menu-item:hover {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* 选中状态使用背景色和左侧边框 */
+[data-theme='dark'] .app-menu .ant-menu-item-selected {
+  background: rgba(102, 126, 234, 0.3) !important;
+  color: #ffffff !important;
+  border-left: 3px solid #667eea !important;
+  border-right: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2) !important;
+  font-weight: 600;
+}
+
+[data-theme='light'] .app-menu .ant-menu-item-selected {
+  background: rgba(102, 126, 234, 0.08) !important;
+  color: #667eea !important;
+  border-left: 3px solid #667eea !important;
+  border-right: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  font-weight: 600;
+}
+
+.app-menu .ant-menu-item-icon {
+  font-size: 18px;
+  margin-right: 12px;
+  transition: color 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-menu .ant-menu-item {
+  display: flex;
+  align-items: center;
+}
+
+/* 折叠状态下菜单图标居中 */
+.app-sider.ant-layout-sider-collapsed .app-menu .ant-menu-item-icon {
+  margin-right: 0;
+}
+
+/* 亮色模式下的菜单图标 */
+[data-theme='light'] .app-menu .ant-menu-item-icon {
+  color: #64748b;
+}
+
+[data-theme='light'] .app-menu .ant-menu-item:hover .ant-menu-item-icon {
+  color: #475569;
+}
+
+[data-theme='light'] .app-menu .ant-menu-item-selected .ant-menu-item-icon {
+  color: #667eea;
+}
+
+/* 暗色模式下的菜单图标 */
+[data-theme='dark'] .app-menu .ant-menu-item-icon {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+[data-theme='dark'] .app-menu .ant-menu-item:hover .ant-menu-item-icon {
+  color: #ffffff;
+}
+
+[data-theme='dark'] .app-menu .ant-menu-item-selected .ant-menu-item-icon {
+  color: #8b9aff;
+}
+
+.sider-footer {
+  padding: 16px 20px;
+  margin-top: auto;
+  transition: all 0.3s ease;
+}
+
+/* 折叠状态下的底部 */
+.app-sider.ant-layout-sider-collapsed .sider-footer {
+  padding: 16px 0;
+  text-align: center;
+}
+
+/* 亮色模式下的侧边栏底部 */
+[data-theme='light'] .sider-footer {
+  border-top: 1px solid #e2e8f0;
+}
+
+[data-theme='light'] .sider-footer-text {
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+/* 暗色模式下的侧边栏底部 */
+[data-theme='dark'] .sider-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sider-footer-text {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  transition: color 0.3s ease;
+}
+
+.app-main-layout {
+  margin-left: 260px;
+  transition: margin-left 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  width: calc(100% - 260px);
+  min-width: 0;
+}
+
+.app-main-layout.collapsed {
+  margin-left: 80px;
+  width: calc(100% - 80px);
+}
+
+/* 确保侧边栏折叠时宽度正确 */
+.app-sider {
+  width: 260px !important;
+  min-width: 260px !important;
+  max-width: 260px !important;
+  transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
+}
+
+.app-sider.ant-layout-sider-collapsed {
+  width: 80px !important;
+  min-width: 80px !important;
+  max-width: 80px !important;
+}
+
+/* 折叠状态下确保所有内容居中 */
+.app-sider.ant-layout-sider-collapsed .ant-layout-sider-children {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.app-header {
+  background: var(--bg-primary);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px 0 var(--shadow-color);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  height: 72px;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+
+.trigger {
+  font-size: 18px;
+  padding: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trigger:hover {
+  color: #667eea;
+  background: var(--bg-tertiary);
+}
+
+.header-breadcrumb {
+  display: flex;
+  align-items: center;
+}
+
+.header-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-action-btn {
+  font-size: 18px;
+  padding: 8px;
+  color: #64748b;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.header-action-btn:hover {
+  color: #667eea;
+  background: var(--bg-tertiary);
+}
+
+.user-info {
+  padding: 4px 12px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-info:hover {
+  background: var(--bg-tertiary);
+  transition: background-color 0.3s ease;
+}
+
+.user-avatar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: 2px solid #fff;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.user-name {
+  font-size: 14px;
+  color: #1e293b;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+.user-role {
+  font-size: 12px;
+  line-height: 1.2;
+  color: #64748b;
+}
+
+.app-content {
+  padding: 24px;
+  min-height: calc(100vh - 72px);
+  background: var(--bg-secondary);
+  transition: background-color 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.content-wrapper {
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .app-main-layout {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+
+  .app-main-layout.collapsed {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+
+  .app-sider {
+    position: fixed;
+    z-index: 1000;
+  }
+
+  .app-content {
+    padding: 16px;
+    width: 100%;
+  }
+
+  .header-title {
+    font-size: 18px;
+  }
+
+  .user-details {
+    display: none;
+  }
+}
+
+/* 暗色模式支持 */
+[data-theme='dark'] {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  --border-color: #334155;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+}
+
+[data-theme='light'] {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #f1f5f9;
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --text-tertiary: #64748b;
+  --border-color: #e2e8f0;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+/* 暗色模式样式 */
+[data-theme='dark'] .app-content {
+  background: var(--bg-primary);
+}
+
+[data-theme='dark'] .app-header {
+  background: var(--bg-secondary);
+  border-bottom-color: var(--border-color);
+}
+
+[data-theme='dark'] .header-title {
+  color: var(--text-primary);
+}
+
+[data-theme='dark'] .trigger {
+  color: var(--text-secondary);
+}
+
+[data-theme='dark'] .trigger:hover {
+  color: #667eea;
+  background: var(--bg-tertiary);
+}
+
+[data-theme='dark'] .header-action-btn {
+  color: var(--text-secondary);
+}
+
+[data-theme='dark'] .header-action-btn:hover {
+  color: #667eea;
+  background: var(--bg-tertiary);
+}
+
+[data-theme='dark'] .user-info:hover {
+  background: var(--bg-tertiary);
+}
+
+[data-theme='dark'] .user-name {
+  color: var(--text-primary);
+}
+
+[data-theme='dark'] .user-role {
+  color: var(--text-tertiary);
+}
+
+[data-theme='dark'] .dashboard-title {
+  color: var(--text-primary);
+}
+
+[data-theme='dark'] .dashboard-subtitle {
+  color: var(--text-tertiary);
+}
+
+[data-theme='dark'] .dashboard-card {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+[data-theme='dark'] .stat-card {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+[data-theme='dark'] .empty-state {
+  color: var(--text-tertiary);
+}

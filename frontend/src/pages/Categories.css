@@ -1,0 +1,16 @@
+.categories-container {
+  width: 100%;
+}
+
+.categories-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.categories-card {
+  border-radius: 12px;
+  box-shadow: 0 1px 3px var(--shadow-color);
+}
+

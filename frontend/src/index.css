@@ -1,0 +1,369 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #f1f5f9;
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --text-tertiary: #64748b;
+  --border-color: #e2e8f0;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --primary-color: #667eea;
+  --primary-color-light: #7c3aed;
+  --primary-color-dark: #764ba2;
+  --primary-color-accent: #a855f7;
+}
+
+[data-theme='dark'] {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  --border-color: #334155;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --primary-color: #667eea;
+  --primary-color-light: #7c3aed;
+  --primary-color-dark: #764ba2;
+  --primary-color-accent: #a855f7;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--text-tertiary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+[data-theme='dark'] ::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+}
+
+[data-theme='dark'] ::-webkit-scrollbar-thumb {
+  background: var(--text-tertiary);
+}
+
+[data-theme='dark'] ::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Ant Design 组件样式覆盖 */
+.ant-card {
+  border-radius: 12px;
+  background: var(--bg-primary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.ant-btn {
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+/* 输入框基础样式 */
+.ant-input,
+.ant-input-affix-wrapper {
+  border-radius: 8px !important;
+  background: var(--bg-primary) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+  font-size: 14px !important;
+  transition: all 0.2s ease !important;
+}
+
+.ant-input-affix-wrapper {
+  background: var(--bg-primary) !important;
+}
+
+.ant-input-affix-wrapper .ant-input {
+  background: transparent !important;
+}
+
+.ant-input::placeholder,
+.ant-input-affix-wrapper .ant-input::placeholder {
+  color: var(--text-tertiary) !important;
+}
+
+.ant-input-affix-wrapper:hover,
+.ant-input:hover {
+  border-color: var(--primary-color) !important;
+}
+
+.ant-input-affix-wrapper-focused,
+.ant-input-affix-wrapper:focus,
+.ant-input:focus,
+.ant-input-focused {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1) !important;
+}
+
+/* 输入框前缀和后缀图标 */
+.ant-input-prefix,
+.ant-input-suffix {
+  color: var(--text-tertiary) !important;
+}
+
+.ant-input-prefix .anticon,
+.ant-input-suffix .anticon {
+  color: var(--text-tertiary) !important;
+}
+
+.ant-input-affix-wrapper:hover .ant-input-prefix .anticon,
+.ant-input-affix-wrapper:hover .ant-input-suffix .anticon,
+.ant-input-affix-wrapper-focused .ant-input-prefix .anticon,
+.ant-input-affix-wrapper-focused .ant-input-suffix .anticon {
+  color: var(--primary-color) !important;
+}
+
+/* 清除按钮 */
+.ant-input-clear-icon {
+  color: var(--text-tertiary) !important;
+  background: var(--bg-primary) !important;
+}
+
+.ant-input-clear-icon:hover {
+  color: var(--text-primary) !important;
+}
+
+/* 禁用状态 */
+.ant-input[disabled],
+.ant-input-affix-wrapper-disabled {
+  background: var(--bg-tertiary) !important;
+  color: var(--text-tertiary) !important;
+  cursor: not-allowed !important;
+}
+
+.ant-select {
+  font-size: 14px;
+}
+
+.ant-select-selector {
+  border-radius: 8px !important;
+  background: var(--bg-secondary) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+  transition: all 0.2s ease !important;
+}
+
+.ant-select-selector:hover {
+  border-color: var(--primary-color) !important;
+  background: var(--bg-primary) !important;
+}
+
+.ant-select-focused .ant-select-selector {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1) !important;
+  background: var(--bg-primary) !important;
+}
+
+.ant-select-selection-item {
+  color: var(--text-primary) !important;
+  font-size: 14px !important;
+}
+
+.ant-select-selection-placeholder {
+  color: var(--text-tertiary) !important;
+  font-size: 14px !important;
+}
+
+.ant-select-arrow {
+  color: var(--text-tertiary) !important;
+}
+
+.ant-select-clear {
+  color: var(--text-tertiary) !important;
+  background: var(--bg-secondary) !important;
+}
+
+.ant-select-dropdown {
+  background: var(--bg-primary) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px var(--shadow-color) !important;
+}
+
+.ant-select-item {
+  color: var(--text-primary) !important;
+  font-size: 14px !important;
+  transition: all 0.2s ease !important;
+}
+
+.ant-select-item-option {
+  color: var(--text-primary) !important;
+}
+
+.ant-select-item-option:hover {
+  background: var(--bg-secondary) !important;
+}
+
+.ant-select-item-option-selected {
+  background: rgba(102, 126, 234, 0.1) !important;
+  color: var(--primary-color) !important;
+  font-weight: 500 !important;
+}
+
+.ant-select-item-option-active {
+  background: var(--bg-secondary) !important;
+}
+
+.ant-picker {
+  border-radius: 8px !important;
+  background: var(--bg-secondary) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+  font-size: 14px !important;
+  transition: all 0.2s ease !important;
+}
+
+.ant-picker:hover {
+  border-color: var(--primary-color) !important;
+  background: var(--bg-primary) !important;
+}
+
+.ant-picker-focused {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1) !important;
+  background: var(--bg-primary) !important;
+}
+
+.ant-picker-input > input {
+  color: var(--text-primary) !important;
+  font-size: 14px !important;
+  background: transparent !important;
+}
+
+.ant-picker-input > input::placeholder {
+  color: var(--text-tertiary) !important;
+}
+
+.ant-picker-suffix {
+  color: var(--text-tertiary) !important;
+}
+
+.ant-picker-clear {
+  color: var(--text-tertiary) !important;
+  background: var(--bg-secondary) !important;
+}
+
+.ant-picker-dropdown {
+  background: var(--bg-primary) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px var(--shadow-color) !important;
+}
+
+.ant-picker-panel {
+  background: var(--bg-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+.ant-picker-header {
+  border-bottom-color: var(--border-color) !important;
+}
+
+.ant-picker-header-view {
+  color: var(--text-primary) !important;
+}
+
+.ant-picker-content th {
+  color: var(--text-secondary) !important;
+}
+
+.ant-picker-cell {
+  color: var(--text-primary) !important;
+}
+
+.ant-picker-cell:hover:not(.ant-picker-cell-disabled) .ant-picker-cell-inner {
+  background: var(--bg-secondary) !important;
+}
+
+.ant-picker-cell-selected .ant-picker-cell-inner {
+  background: var(--primary-color) !important;
+  color: #fff !important;
+}
+
+.ant-picker-cell-today .ant-picker-cell-inner {
+  border-color: var(--primary-color) !important;
+}
+
+/* Typography 文字样式统一 */
+.ant-typography {
+  color: var(--text-primary);
+  transition: color 0.3s ease;
+}
+
+.ant-typography h1,
+.ant-typography h2,
+.ant-typography h3,
+.ant-typography h4,
+.ant-typography h5,
+.ant-typography h6 {
+  color: var(--text-primary);
+}
+
+.ant-typography-secondary {
+  color: var(--text-secondary) !important;
+}
+
+.ant-typography[type='secondary'] {
+  color: var(--text-secondary) !important;
+}
+
+.ant-typography-success {
+  color: var(--text-primary);
+}
+
+.ant-typography-warning {
+  color: var(--text-primary);
+}
+
+.ant-typography-danger {
+  color: var(--text-primary);
+}
+
+/* 确保所有文字都使用统一的字体大小和颜色 */
+.ant-input,
+.ant-select-selection-item,
+.ant-select-selection-placeholder,
+.ant-picker-input > input,
+.ant-btn {
+  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+

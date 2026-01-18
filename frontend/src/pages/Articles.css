@@ -1,0 +1,319 @@
+.articles-container {
+  width: 100%;
+}
+
+.articles-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.articles-filter-card {
+  margin-bottom: 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px var(--shadow-color);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.articles-filter-card:hover {
+  box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.articles-list-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px var(--shadow-color);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  padding: 24px;
+}
+
+.articles-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.article-card {
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-primary);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+  padding: 20px;
+}
+
+.article-card .ant-card-body {
+  padding: 0;
+}
+
+.article-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary-color), var(--primary-color-accent));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.article-card:hover {
+  border-color: var(--primary-color);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
+  transform: translateY(-4px);
+  background: var(--bg-secondary);
+}
+
+.article-card:hover::before {
+  opacity: 1;
+}
+
+.article-content {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 4px;
+}
+
+.article-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.article-title {
+  flex: 1;
+  margin: 0 !important;
+  color: var(--text-primary) !important;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.5;
+  transition: color 0.2s ease;
+}
+
+.article-card:hover .article-title {
+  color: var(--primary-color) !important;
+}
+
+.article-actions {
+  flex-shrink: 0;
+  display: flex;
+  gap: 4px;
+}
+
+.article-actions .ant-btn {
+  color: var(--text-secondary);
+  border-color: transparent;
+  background: transparent;
+  transition: all 0.2s ease;
+  border-radius: 6px;
+  padding: 4px 12px;
+  height: auto;
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.article-actions .ant-btn:hover {
+  color: var(--primary-color);
+  background: rgba(102, 126, 234, 0.1);
+  border-color: transparent;
+  transform: translateY(-1px);
+}
+
+.article-actions .ant-btn-danger {
+  color: var(--text-secondary);
+}
+
+.article-actions .ant-btn-danger:hover {
+  color: #ff4d4f;
+  background: rgba(255, 77, 79, 0.1);
+  transform: translateY(-1px);
+}
+
+/* 未读状态按钮特殊样式 */
+.article-actions .ant-btn:has(.anticon-eye-invisible) {
+  color: #ff7875;
+  font-weight: 500;
+}
+
+.article-actions .ant-btn:has(.anticon-eye-invisible):hover {
+  color: #ff4d4f;
+  background: rgba(255, 77, 79, 0.15);
+}
+
+/* 已收藏按钮特殊样式 */
+.article-actions .ant-btn:has(.anticon-star) {
+  color: var(--text-secondary);
+}
+
+.article-actions .ant-btn:has(.anticon-star-filled) {
+  color: #ffc53d;
+}
+
+.article-actions .ant-btn:has(.anticon-star-filled):hover {
+  color: #ffa940;
+  background: rgba(250, 173, 20, 0.15);
+}
+
+.article-summary {
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.7;
+  margin-top: 4px;
+}
+
+.article-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  color: var(--text-tertiary);
+  font-size: 13px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-color);
+}
+
+.article-meta .anticon {
+  color: var(--text-tertiary);
+  font-size: 13px;
+}
+
+.article-meta .ant-typography {
+  color: var(--text-tertiary) !important;
+  font-size: 13px !important;
+}
+
+.article-meta .ant-typography-caption {
+  color: var(--text-tertiary) !important;
+  font-size: 13px !important;
+}
+
+.article-meta .ant-tag {
+  margin: 0;
+  border-radius: 6px;
+  font-size: 12px;
+  padding: 2px 8px;
+  border: none;
+  font-weight: 500;
+}
+
+.article-meta .ant-tag-red {
+  background: rgba(255, 77, 79, 0.15);
+  color: #ff7875;
+}
+
+.article-meta .ant-tag-gold {
+  background: rgba(250, 173, 20, 0.15);
+  color: #ffc53d;
+}
+
+.article-meta .ant-tag-blue {
+  background: rgba(102, 126, 234, 0.15);
+  color: var(--primary-color);
+}
+
+.articles-pagination {
+  margin-top: 32px;
+  display: flex;
+  justify-content: center;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-color);
+}
+
+.articles-pagination .ant-pagination {
+  color: var(--text-primary);
+}
+
+.articles-pagination .ant-pagination-item {
+  border-color: var(--border-color);
+  background: var(--bg-primary);
+}
+
+.articles-pagination .ant-pagination-item a {
+  color: var(--text-primary);
+}
+
+.articles-pagination .ant-pagination-item:hover {
+  border-color: var(--primary-color);
+}
+
+.articles-pagination .ant-pagination-item:hover a {
+  color: var(--primary-color);
+}
+
+.articles-pagination .ant-pagination-item-active {
+  border-color: var(--primary-color);
+  background: var(--primary-color);
+}
+
+.articles-pagination .ant-pagination-item-active a {
+  color: #fff;
+}
+
+.articles-pagination .ant-pagination-prev,
+.articles-pagination .ant-pagination-next {
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.articles-pagination .ant-pagination-prev:hover,
+.articles-pagination .ant-pagination-next:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+/* 筛选卡片中的输入框和选择器样式优化 - 确保与全局样式一致 */
+.articles-filter-card .ant-input,
+.articles-filter-card .ant-input-affix-wrapper {
+  background: var(--bg-primary) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+.articles-filter-card .ant-input-affix-wrapper .ant-input {
+  background: transparent !important;
+}
+
+.articles-filter-card .ant-input-prefix .anticon,
+.articles-filter-card .ant-input-suffix .anticon {
+  color: var(--text-tertiary) !important;
+}
+
+.articles-filter-card .ant-input-affix-wrapper:hover .ant-input-prefix .anticon,
+.articles-filter-card .ant-input-affix-wrapper-focused .ant-input-prefix .anticon {
+  color: var(--primary-color) !important;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .article-header {
+    flex-direction: column;
+  }
+
+  .article-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .article-title {
+    font-size: 16px;
+  }
+
+  .articles-list-card {
+    padding: 16px;
+  }
+
+  .articles-list {
+    gap: 16px;
+  }
+}
+

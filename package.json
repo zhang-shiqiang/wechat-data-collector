@@ -1,0 +1,24 @@
+{
+  "name": "wechat-data-collector",
+  "version": "1.0.0",
+  "description": "微信公众号管理阅读器",
+  "private": true,
+  "scripts": {
+    "start": "bash start.sh",
+    "stop": "bash stop.sh",
+    "start:backend": "cd backend && npm run start:dev",
+    "start:frontend": "cd frontend && npm run dev",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "build:backend": "cd backend && npm run build",
+    "build:frontend": "cd frontend && npm run build",
+    "build:all": "npm run build:backend && npm run build:frontend"
+  },
+  "keywords": [
+    "wechat",
+    "公众号",
+    "阅读器"
+  ],
+  "author": "",
+  "license": "MIT"
+}
+

@@ -1,0 +1,437 @@
+.accounts-container {
+  width: 100%;
+}
+
+.accounts-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.accounts-card {
+  border-radius: 12px;
+  box-shadow: 0 1px 3px var(--shadow-color);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  transition: background-color 0.3s ease;
+}
+
+/* 模态框样式 */
+.accounts-container .ant-modal-content {
+  border-radius: 12px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.accounts-container .ant-modal-header {
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-color);
+  border-radius: 12px 12px 0 0;
+  padding: 20px 24px;
+}
+
+.accounts-container .ant-modal-title {
+  color: var(--text-primary) !important;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.accounts-container .ant-modal-close {
+  color: var(--text-secondary);
+}
+
+.accounts-container .ant-modal-close:hover {
+  color: var(--text-primary);
+}
+
+.accounts-container .ant-modal-body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  padding: 24px;
+}
+
+.accounts-container .ant-modal-footer {
+  background: var(--bg-primary);
+  border-top: 1px solid var(--border-color);
+  border-radius: 0 0 12px 12px;
+  padding: 16px 24px;
+}
+
+.accounts-container .ant-form-item-label > label {
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.accounts-container .ant-form-item-label > label.ant-form-item-required::before {
+  color: #ff4d4f;
+}
+
+.accounts-container .ant-input,
+.accounts-container .ant-select-selector {
+  border-radius: 8px;
+  border-color: var(--border-color);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+}
+
+.accounts-container .ant-input:hover,
+.accounts-container .ant-select:hover .ant-select-selector {
+  border-color: var(--primary-color);
+}
+
+.accounts-container .ant-input:focus,
+.accounts-container .ant-select-focused .ant-select-selector {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+}
+
+/* 表单验证错误样式 */
+.accounts-container .ant-form-item-has-error .ant-input,
+.accounts-container .ant-form-item-has-error .ant-select-selector {
+  border-color: #ff4d4f;
+}
+
+.accounts-container .ant-form-item-has-error .ant-input:focus,
+.accounts-container .ant-form-item-has-error .ant-select-focused .ant-select-selector {
+  border-color: #ff4d4f;
+  box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.1);
+}
+
+.accounts-container .ant-form-item-explain-error {
+  color: #ff4d4f;
+  font-size: 12px;
+}
+
+.accounts-container .ant-form-item-extra {
+  color: var(--text-tertiary);
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* 模态框按钮样式 */
+.accounts-container .ant-modal-footer .ant-btn {
+  border-radius: 6px;
+  height: 36px;
+  padding: 0 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.accounts-container .ant-modal-footer .ant-btn-default {
+  background: var(--bg-primary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.accounts-container .ant-modal-footer .ant-btn-default:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  background: var(--bg-tertiary);
+}
+
+.accounts-container .ant-modal-footer .ant-btn-primary {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  color: #ffffff;
+}
+
+.accounts-container .ant-modal-footer .ant-btn-primary:hover {
+  background: var(--primary-color-dark);
+  border-color: var(--primary-color-dark);
+  color: #ffffff;
+}
+
+/* 下拉菜单样式 */
+.accounts-container .ant-select-dropdown {
+  background: var(--bg-primary) !important;
+  border-color: var(--border-color) !important;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.accounts-container .ant-select-item {
+  color: var(--text-primary) !important;
+  padding: 8px 12px;
+  transition: all 0.2s ease;
+}
+
+.accounts-container .ant-select-item:hover {
+  background: var(--bg-tertiary) !important;
+}
+
+.accounts-container .ant-select-item-option-selected {
+  background: var(--bg-tertiary) !important;
+  color: var(--primary-color) !important;
+  font-weight: 500;
+}
+
+/* 表格样式优化 */
+.accounts-card .ant-table {
+  background: transparent;
+}
+
+.accounts-card .ant-table-thead > tr > th {
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.accounts-card .ant-table-tbody > tr > td {
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+  transition: background-color 0.2s ease;
+}
+
+.accounts-card .ant-table-tbody > tr:hover > td {
+  background: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
+}
+
+/* 深色模式下的 hover 效果 */
+[data-theme='dark'] .accounts-card .ant-table-tbody > tr:hover > td {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* 浅色模式下的 hover 效果 */
+[data-theme='light'] .accounts-card .ant-table-tbody > tr:hover > td {
+  background: #f8fafc !important;
+}
+
+/* 确保表格内所有文字颜色正确 */
+.accounts-card .ant-table-tbody .ant-typography {
+  color: var(--text-primary) !important;
+}
+
+.accounts-card .ant-table-tbody .ant-typography.ant-typography-secondary {
+  color: var(--text-secondary) !important;
+}
+
+.accounts-card .ant-table-tbody .ant-typography.ant-typography-danger {
+  color: var(--primary-color) !important;
+}
+
+/* hover 时确保所有文字颜色保持正确 */
+.accounts-card .ant-table-tbody > tr:hover > td .ant-typography {
+  color: var(--text-primary) !important;
+}
+
+.accounts-card .ant-table-tbody > tr:hover > td .ant-typography.ant-typography-secondary {
+  color: var(--text-secondary) !important;
+}
+
+.accounts-card .ant-table-tbody > tr:hover > td .ant-typography.ant-typography-danger {
+  color: var(--primary-color) !important;
+}
+
+/* hover 时确保按钮和链接颜色正确 */
+.accounts-card .ant-table-tbody > tr:hover > td .ant-btn,
+.accounts-card .ant-table-tbody > tr:hover > td .ant-btn-link {
+  color: inherit;
+}
+
+/* 确保 Tag 样式正确 - 移除任何输入框样式 */
+.accounts-card .ant-table-tbody .ant-tag {
+  margin: 0 !important;
+  display: inline-block !important;
+  padding: 2px 8px !important;
+  font-size: 12px !important;
+  line-height: 20px !important;
+  border-radius: 4px !important;
+  border: 1px solid transparent !important;
+  background: transparent !important;
+}
+
+/* 确保 Tag 不是输入框 */
+.accounts-card .ant-table-tbody .ant-tag,
+.accounts-card .ant-table-tbody .ant-tag * {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+/* hover 时确保 Tag 颜色正确 */
+.accounts-card .ant-table-tbody > tr:hover > td .ant-tag {
+  opacity: 1 !important;
+}
+
+/* 深色模式下的 Tag */
+[data-theme='dark'] .accounts-card .ant-table-tbody .ant-tag {
+  background: transparent !important;
+  color: var(--text-primary) !important;
+}
+
+/* 浅色模式下的 Tag */
+[data-theme='light'] .accounts-card .ant-table-tbody .ant-tag {
+  background: transparent !important;
+  color: var(--text-primary) !important;
+}
+
+/* 确保表格单元格中没有输入框样式 */
+.accounts-card .ant-table-tbody > tr > td {
+  position: relative;
+}
+
+.accounts-card .ant-table-tbody > tr > td input,
+.accounts-card .ant-table-tbody > tr > td .ant-input {
+  display: none !important;
+}
+
+/* hover 时确保所有文字元素颜色正确 */
+.accounts-card .ant-table-tbody > tr:hover > td {
+  color: var(--text-primary) !important;
+}
+
+.accounts-card .ant-table-tbody > tr:hover > td span,
+.accounts-card .ant-table-tbody > tr:hover > td div {
+  color: inherit;
+}
+
+.accounts-card .ant-pagination {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* 分页区域文字颜色 */
+.accounts-card .ant-pagination-total-text {
+  color: var(--text-primary) !important;
+  margin-right: 16px;
+}
+
+/* 分页按钮（上一页/下一页） */
+.accounts-card .ant-pagination-prev,
+.accounts-card .ant-pagination-next {
+  background: var(--bg-primary) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+  min-width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.accounts-card .ant-pagination-prev:hover:not(.ant-pagination-disabled),
+.accounts-card .ant-pagination-next:hover:not(.ant-pagination-disabled) {
+  border-color: var(--primary-color) !important;
+  color: var(--primary-color) !important;
+  background: var(--bg-tertiary) !important;
+}
+
+.accounts-card .ant-pagination-prev.ant-pagination-disabled,
+.accounts-card .ant-pagination-next.ant-pagination-disabled {
+  background: var(--bg-tertiary) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-tertiary) !important;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.accounts-card .ant-pagination-prev .ant-pagination-item-link,
+.accounts-card .ant-pagination-next .ant-pagination-item-link {
+  border: none !important;
+  background: transparent !important;
+  color: inherit !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* 分页数字按钮 */
+.accounts-card .ant-pagination-item {
+  background: var(--bg-primary) !important;
+  border-color: var(--border-color) !important;
+  min-width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.accounts-card .ant-pagination-item a {
+  color: var(--text-primary) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.accounts-card .ant-pagination-item:hover:not(.ant-pagination-item-active) {
+  border-color: var(--primary-color) !important;
+  background: var(--bg-tertiary) !important;
+}
+
+.accounts-card .ant-pagination-item:hover:not(.ant-pagination-item-active) a {
+  color: var(--primary-color) !important;
+}
+
+.accounts-card .ant-pagination-item-active {
+  background: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+.accounts-card .ant-pagination-item-active a {
+  color: #ffffff !important;
+  font-weight: 500;
+}
+
+/* 分页选项下拉 */
+.accounts-card .ant-pagination-options {
+  color: var(--text-primary);
+  margin-left: 16px;
+}
+
+.accounts-card .ant-pagination-options .ant-select {
+  color: var(--text-primary);
+}
+
+.accounts-card .ant-pagination-options .ant-select-selector {
+  background: var(--bg-primary) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+  border-radius: 6px;
+  height: 32px;
+}
+
+.accounts-card .ant-pagination-options .ant-select-selector:hover {
+  border-color: var(--primary-color) !important;
+}
+
+.accounts-card .ant-pagination-options .ant-select-selection-item {
+  color: var(--text-primary) !important;
+  line-height: 30px;
+}
+
+.accounts-card .ant-pagination-options .ant-select-arrow {
+  color: var(--text-secondary);
+}
+
+/* 空状态样式 */
+.accounts-card .ant-empty {
+  padding: 60px 0;
+}
+
+.accounts-card .ant-empty-description {
+  color: var(--text-secondary) !important;
+}
+
+/* 确保所有文字都使用正确的颜色 */
+.accounts-container .ant-typography {
+  color: var(--text-primary);
+}
+
+.accounts-container .ant-typography.ant-typography-secondary {
+  color: var(--text-secondary);
+}
+
