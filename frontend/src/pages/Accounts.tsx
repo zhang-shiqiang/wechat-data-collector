@@ -8,6 +8,7 @@ import {
   Form,
   Input,
   Select,
+  AutoComplete,
   message,
   Popconfirm,
   Tag,
@@ -23,7 +24,6 @@ import {
   ReloadOutlined,
   SearchOutlined,
   LinkOutlined,
-  CheckOutlined,
 } from '@ant-design/icons';
 import { accountApi, WechatAccount, CreateAccountParams } from '../api/account';
 import request from '../api/request';
@@ -43,8 +43,7 @@ export default function Accounts() {
   const [urlForm] = Form.useForm();
   const [searching, setSearching] = useState(false);
   const [searchResults, setSearchResults] = useState<any[]>([]);
-  const [showSearchResults, setShowSearchResults] = useState(false);
-  const [searchInputValue, setSearchInputValue] = useState('');
+  const [searchOptions, setSearchOptions] = useState<any[]>([]);
 
   useEffect(() => {
     loadAccounts();
@@ -307,9 +306,8 @@ export default function Accounts() {
         onCancel={() => {
           setModalVisible(false);
           form.resetFields();
-          setSearchInputValue('');
           setSearchResults([]);
-          setShowSearchResults(false);
+          setSearchOptions([]);
         }}
         onOk={() => form.submit()}
         width={520}
@@ -326,132 +324,78 @@ export default function Accounts() {
             name="name"
             label="公众号名称"
             rules={[{ required: true, message: '请输入公众号名称' }]}
-            extra='输入公众号名称后，可以点击搜索图标搜索公众号，或直接点击"查询文章"按钮加载文章'
+            extra='输入公众号名称后，会自动搜索相关公众号，或直接点击"查询文章"按钮加载文章'
           >
-            <Input.Group compact style={{ display: 'flex' }}>
-              <Input
-                placeholder="请输入公众号名称，例如：Vue中文社区"
-                size="large"
-                style={{ flex: 1 }}
-                value={searchInputValue}
-                onFocus={() => {
-                  if (searchResults.length > 0) {
-                    setShowSearchResults(true);
-                  }
-                }}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setSearchInputValue(value);
-                  // 同步到表单
-                  form.setFieldsValue({ name: value });
-                  if (!value) {
-                    setSearchResults([]);
-                    setShowSearchResults(false);
-                  }
-                }}
-              />
-              <Button
-                size="large"
-                icon={<SearchOutlined />}
-                loading={searching}
-                onClick={async () => {
-                  // 优先使用输入框的值，如果没有则从表单获取
-                  const name = searchInputValue || form.getFieldValue('name') || '';
-                  if (!name || name.trim() === '') {
-                    message.warning('请先输入公众号名称');
-                    return;
-                  }
-                  setSearching(true);
-                  try {
-                    // 注意：request 拦截器已经处理了响应，返回的是 data 字段
-                    const response = await request.get('/accounts/search', {
-                      params: { query: name.trim() },
-                    });
-                    if (response && response.list && response.list.length > 0) {
-                      setSearchResults(response.list);
-                      setShowSearchResults(true);
-                      message.success(`找到 ${response.list.length} 个相关公众号`);
-                    } else {
-                      setSearchResults([]);
-                      setShowSearchResults(false);
-                      message.info('未找到相关公众号');
-                    }
-                  } catch (error: any) {
-                    const errorMsg = error.response?.data?.message || error.message || '搜索失败';
-                    message.error(errorMsg);
-                    setSearchResults([]);
-                    setShowSearchResults(false);
-                  } finally {
-                    setSearching(false);
-                  }
-                }}
-              >
-                搜索
-              </Button>
-            </Input.Group>
-            {showSearchResults && searchResults.length > 0 && (
-              <div
-                style={{
-                  marginTop: 8,
-                  border: '1px solid var(--border-color)',
-                  borderRadius: 8,
-                  background: 'var(--bg-primary)',
-                  maxHeight: 200,
-                  overflowY: 'auto',
-                }}
-              >
-                {searchResults.map((item: any, index: number) => (
-                  <div
-                    key={index}
-                    onClick={() => {
-                      const selectedName = item.nickname || item.name;
-                      setSearchInputValue(selectedName);
-                      form.setFieldsValue({ name: selectedName });
-                      setShowSearchResults(false);
-                    }}
-                    style={{
-                      padding: '12px 16px',
-                      cursor: 'pointer',
-                      borderBottom: index < searchResults.length - 1 ? '1px solid var(--border-color)' : 'none',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 12,
-                      transition: 'background 0.2s',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = 'var(--bg-secondary)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = 'var(--bg-primary)';
-                    }}
-                  >
-                    {item.headimg && (
-                      <img
-                        src={item.headimg}
-                        alt={item.nickname}
-                        style={{
-                          width: 40,
-                          height: 40,
-                          borderRadius: 8,
-                          objectFit: 'cover',
-                        }}
-                      />
-                    )}
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: 500, color: 'var(--text-primary)', marginBottom: 4 }}>
-                        {item.nickname || item.name}
-                      </div>
-                      {item.alias && (
-                        <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>
-                          {item.alias}
+            <AutoComplete
+              size="large"
+              placeholder="请输入公众号名称，例如：Vue中文社区"
+              options={searchOptions}
+              loading={searching}
+              onSearch={async (value) => {
+                if (!value || value.trim() === '') {
+                  setSearchOptions([]);
+                  setSearchResults([]);
+                  return;
+                }
+                
+                setSearching(true);
+                try {
+                  const response = await request.get('/accounts/search', {
+                    params: { query: value.trim() },
+                  });
+                  if (response && response.list && response.list.length > 0) {
+                    setSearchResults(response.list);
+                    const options = response.list.map((item: any) => ({
+                      value: item.nickname || item.name,
+                      label: (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                          {item.headimg && (
+                            <img
+                              src={item.headimg}
+                              alt={item.nickname}
+                              style={{
+                                width: 32,
+                                height: 32,
+                                borderRadius: 6,
+                                objectFit: 'cover',
+                              }}
+                            />
+                          )}
+                          <div style={{ flex: 1 }}>
+                            <div style={{ fontWeight: 500, color: 'var(--text-primary)' }}>
+                              {item.nickname || item.name}
+                            </div>
+                            {item.alias && (
+                              <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>
+                                {item.alias}
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      )}
-                    </div>
-                    <CheckOutlined style={{ color: 'var(--primary-color)' }} />
-                  </div>
-                ))}
-              </div>
-            )}
+                      ),
+                      item: item,
+                    }));
+                    setSearchOptions(options);
+                  } else {
+                    setSearchOptions([]);
+                    setSearchResults([]);
+                  }
+                } catch (error: any) {
+                  const errorMsg = error.response?.data?.message || error.message || '搜索失败';
+                  message.error(errorMsg);
+                  setSearchOptions([]);
+                  setSearchResults([]);
+                } finally {
+                  setSearching(false);
+                }
+              }}
+              onSelect={(value, option: any) => {
+                // 选择后，可以保存完整的item信息到表单（如果需要）
+                form.setFieldsValue({ name: value });
+              }}
+              filterOption={false}
+              notFoundContent={searching ? '搜索中...' : '未找到相关公众号'}
+            />
           </Form.Item>
 
           <Form.Item
