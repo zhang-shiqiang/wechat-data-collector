@@ -23,6 +23,7 @@ import {
   WechatOutlined,
   SunOutlined,
   MoonOutlined,
+  FolderOutlined,
 } from '@ant-design/icons';
 import { useAuthStore } from '../stores/authStore';
 import { useThemeStore } from '../stores/themeStore';
@@ -49,14 +50,14 @@ export default function Layout({ children }: LayoutProps) {
       label: '仪表盘',
     },
     {
-      key: '/accounts',
-      icon: <AppstoreOutlined />,
-      label: '公众号列表',
+      key: '/categories',
+      icon: <FolderOutlined />,
+      label: '分类管理',
     },
     {
-      key: '/articles',
-      icon: <FileTextOutlined />,
-      label: '文章列表',
+      key: '/content',
+      icon: <AppstoreOutlined />,
+      label: '内容管理',
     },
     {
       key: '/settings',

@@ -1,0 +1,70 @@
+.settings-container {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.settings-card {
+  background: var(--bg-primary);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px var(--shadow-color);
+}
+
+.settings-header {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.settings-header .ant-typography {
+  margin-bottom: 8px;
+}
+
+.settings-card .ant-form-item-label > label {
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 14px;
+  width: 100%;
+}
+
+.settings-card .ant-form-item-label > label > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.settings-card .ant-input,
+.settings-card .ant-input-affix-wrapper,
+.settings-card textarea.ant-input {
+  background: var(--bg-primary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.settings-card .ant-input:focus,
+.settings-card .ant-input-affix-wrapper:focus,
+.settings-card textarea.ant-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+}
+
+.settings-card .ant-btn-primary {
+  height: 40px;
+  padding: 0 32px;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+/* 暗色主题下的主要按钮 */
+[data-theme='dark'] .settings-card .ant-btn-primary {
+  background: #94a3b8 !important;
+  border-color: #94a3b8 !important;
+}
+
+[data-theme='dark'] .settings-card .ant-btn-primary:hover,
+[data-theme='dark'] .settings-card .ant-btn-primary:focus {
+  background: #cbd5e1 !important;
+  border-color: #cbd5e1 !important;
+}

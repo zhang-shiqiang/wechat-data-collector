@@ -6,6 +6,7 @@ import { CategoryModule } from './category/category.module';
 import { AccountModule } from './account/account.module';
 import { ArticleModule } from './article/article.module';
 import { AuthModule } from './auth/auth.module';
+import { SettingsModule } from './settings/settings.module';
 import { User } from './user/entities/user.entity';
 import { Category } from './category/entities/category.entity';
 import { WechatAccount } from './account/entities/account.entity';
@@ -36,6 +37,7 @@ import { Article } from './article/entities/article.entity';
     AccountModule,
     ArticleModule,
     AuthModule,
+    SettingsModule,
   ],
   controllers: [],
   providers: [],

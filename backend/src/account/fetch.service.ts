@@ -4,6 +4,7 @@ import { load } from 'cheerio';
 import * as fs from 'fs';
 import * as path from 'path';
 import { ArticleService } from '../article/article.service';
+import { SettingsService } from '../settings/settings.service';
 import { WechatAccount } from './entities/account.entity';
 
 interface ArticleData {
@@ -21,7 +22,10 @@ export class FetchService {
   private readonly logger = new Logger(FetchService.name);
   private readonly uploadsDir = path.join(process.cwd(), 'uploads', 'images');
 
-  constructor(private articleService: ArticleService) {
+  constructor(
+    private articleService: ArticleService,
+    private settingsService: SettingsService,
+  ) {
     // 确保上传目录存在
     if (!fs.existsSync(this.uploadsDir)) {
       fs.mkdirSync(this.uploadsDir, { recursive: true });
@@ -144,6 +148,7 @@ export class FetchService {
     account: WechatAccount,
     accountName: string,
     wechatToken?: string,
+    userId?: number,
   ): Promise<{ success: number; failed: number; articles: any[] }> {
     let articles: ArticleData[] = [];
 
@@ -152,13 +157,13 @@ export class FetchService {
         articles = await this.fetchByRSS(account, accountName);
         break;
       case 'crawl':
-        articles = await this.fetchByCrawl(account, accountName, wechatToken);
+        articles = await this.fetchByCrawl(account, accountName, wechatToken, userId);
         break;
       case 'api':
-        articles = await this.fetchByAPI(account, accountName, wechatToken);
+        articles = await this.fetchByAPI(account, accountName, wechatToken, userId);
         break;
       default:
-        articles = await this.fetchByCrawl(account, accountName, wechatToken);
+        articles = await this.fetchByCrawl(account, accountName, wechatToken, userId);
     }
 
     // 保存文章到数据库
@@ -294,19 +299,30 @@ export class FetchService {
     account: WechatAccount,
     accountName: string,
     wechatToken?: string,
+    userId?: number,
   ): Promise<ArticleData[]> {
     this.logger.log(`[爬虫] 正在抓取公众号 "${accountName}" 的文章...`);
 
     try {
       // 优先尝试使用微信公众号平台API（需要配置cookies）
-      const wechatCookies = process.env.WECHAT_MP_COOKIES;
+      const targetUserId = userId || account.userId || 1;
+      const wechatCookies = await this.settingsService.getWechatCookies(targetUserId);
+      
       if (wechatCookies) {
         try {
           this.logger.log('尝试使用微信公众号平台API抓取...');
-          const articles = await this.fetchByWechatMP(accountName, wechatCookies);
+          // 优先使用 appmsgpublish 接口（已发布文章）
+          const articles = await this.fetchByWechatMPPublish(account, accountName, wechatCookies);
           if (articles && articles.length > 0) {
-            this.logger.log(`通过微信公众号平台API获取 ${articles.length} 篇文章`);
+            this.logger.log(`通过微信公众号平台API（已发布）获取 ${articles.length} 篇文章`);
             return articles;
+          }
+          
+          // 如果 appmsgpublish 没有结果，尝试使用 appmsg 接口
+          const articles2 = await this.fetchByWechatMP(accountName, wechatCookies);
+          if (articles2 && articles2.length > 0) {
+            this.logger.log(`通过微信公众号平台API（全部）获取 ${articles2.length} 篇文章`);
+            return articles2;
           }
         } catch (error) {
           this.logger.warn(`微信公众号平台API抓取失败，回退到搜狗搜索: ${error.message}`);
@@ -1086,22 +1102,232 @@ export class FetchService {
     ).join('');
   }
 
+  /**
+   * 使用 appmsgpublish 接口获取已发布文章
+   * 接口：https://mp.weixin.qq.com/cgi-bin/appmsgpublish?sub=list
+   * 响应结构：
+   * {
+   *   "ret": 0,
+   *   "is_admin": true,
+   *   "publish_page": "{\"total_count\":1822,\"publish_count\":6,\"publish_list\":[...]}"
+   * }
+   */
+  private async fetchByWechatMPPublish(
+    account: WechatAccount,
+    accountName: string,
+    cookies: string,
+  ): Promise<ArticleData[]> {
+    this.logger.log(`[微信公众号平台API-已发布] 正在获取公众号 "${accountName}" 的已发布文章...`);
+
+    try {
+      // 第一步：如果没有 fakeid，先搜索公众号获取 fakeid
+      let fakeid = account.wechatId; // 假设 wechatId 存储的是 fakeid
+      
+      if (!fakeid) {
+        this.logger.log('未找到 fakeid，先搜索公众号...');
+        const searchUrl = 'https://mp.weixin.qq.com/cgi-bin/searchbiz';
+        const token = this.extractTokenFromCookies(cookies);
+        const fingerprint = this.extractFingerprintFromCookies(cookies);
+        
+        const searchParams = {
+          action: 'search_biz',
+          begin: '0',
+          count: '5',
+          query: accountName,
+          fingerprint: fingerprint,
+          token: token,
+          lang: 'zh_CN',
+          f: 'json',
+          ajax: '1',
+        };
+
+        const searchResponse = await axios.get(searchUrl, {
+          params: searchParams,
+          headers: {
+            'Cookie': cookies,
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36',
+            'Referer': `https://mp.weixin.qq.com/cgi-bin/appmsg?t=media/appmsg_edit_v2&action=edit&isNew=1&type=77&createType=0&token=${token}&lang=zh_CN&timestamp=${Date.now()}`,
+            'Accept': '*/*',
+            'Accept-Language': 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7',
+            'X-Requested-With': 'XMLHttpRequest',
+            'Connection': 'keep-alive',
+            'Sec-Fetch-Dest': 'empty',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Site': 'same-origin',
+          },
+          timeout: 15000,
+        });
+
+        const searchData = searchResponse.data;
+        if (!searchData || searchData.base_resp?.ret !== 0) {
+          const errorMsg = searchData?.base_resp?.err_msg || '未知错误';
+          this.logger.warn(`搜索公众号失败: ${errorMsg}`);
+          return [];
+        }
+
+        if (!searchData.list || searchData.list.length === 0) {
+          this.logger.warn(`未找到公众号: ${accountName}`);
+          return [];
+        }
+
+        fakeid = searchData.list[0].fakeid;
+        if (!fakeid) {
+          this.logger.warn(`无法获取公众号fakeid`);
+          return [];
+        }
+        
+        this.logger.log(`找到公众号: ${searchData.list[0].nickname}, fakeid: ${fakeid}`);
+      }
+
+      // 第二步：使用 appmsgpublish 接口获取已发布文章
+      const token = this.extractTokenFromCookies(cookies);
+      const fingerprint = this.extractFingerprintFromCookies(cookies);
+      const articles: ArticleData[] = [];
+      let begin = 0;
+      const count = 5; // 每次获取5篇
+      let hasMore = true;
+
+      while (hasMore && begin < 100) {
+        // 限制最多获取100篇文章
+        const publishUrl = 'https://mp.weixin.qq.com/cgi-bin/appmsgpublish';
+        const publishParams = {
+          sub: 'list',
+          search_field: 'null',
+          begin: begin.toString(),
+          count: count.toString(),
+          query: '',
+          fakeid: fakeid,
+          type: '101_1',
+          free_publish_type: '1',
+          sub_action: 'list_ex',
+          fingerprint: fingerprint,
+          token: token,
+          lang: 'zh_CN',
+          f: 'json',
+          ajax: '1',
+        };
+
+        const publishResponse = await axios.get(publishUrl, {
+          params: publishParams,
+          headers: {
+            'Accept': '*/*',
+            'Accept-Language': 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7',
+            'Connection': 'keep-alive',
+            'Referer': `https://mp.weixin.qq.com/cgi-bin/appmsg?t=media/appmsg_edit_v2&action=edit&isNew=1&type=77&createType=0&token=${token}&lang=zh_CN&timestamp=${Date.now()}`,
+            'Sec-Fetch-Dest': 'empty',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Site': 'same-origin',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36',
+            'X-Requested-With': 'XMLHttpRequest',
+            'sec-ch-ua': '"Not(A:Brand";v="8", "Chromium";v="144", "Google Chrome";v="144"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"Windows"',
+            'Cookie': cookies,
+          },
+          maxBodyLength: Infinity,
+          timeout: 15000,
+        });
+
+        const publishData = publishResponse.data;
+        
+        // 检查响应状态
+        if (!publishData || publishData.ret !== 0) {
+          const errorMsg = publishData?.err_msg || '未知错误';
+          this.logger.warn(`获取已发布文章失败: ${errorMsg}`);
+          hasMore = false;
+          break;
+        }
+
+        // 解析 publish_page（它是一个转义的 JSON 字符串）
+        let publishPage: any = null;
+        if (publishData.publish_page) {
+          try {
+            // 如果 publish_page 是字符串，需要解析
+            if (typeof publishData.publish_page === 'string') {
+              publishPage = JSON.parse(publishData.publish_page);
+            } else {
+              publishPage = publishData.publish_page;
+            }
+          } catch (error) {
+            this.logger.warn(`解析 publish_page 失败: ${error.message}`);
+            hasMore = false;
+            break;
+          }
+        }
+
+        if (!publishPage || !publishPage.publish_list || publishPage.publish_list.length === 0) {
+          hasMore = false;
+          break;
+        }
+
+        // 从 publish_list 中提取文章
+        for (const publishItem of publishPage.publish_list) {
+          // 每个 publishItem 包含 appmsgex 数组，里面是实际的文章信息
+          if (publishItem.appmsgex && Array.isArray(publishItem.appmsgex)) {
+            for (const articleItem of publishItem.appmsgex) {
+              if (articleItem.link && articleItem.title) {
+                articles.push({
+                  title: articleItem.title || '无标题',
+                  summary: articleItem.digest || undefined,
+                  coverImage: articleItem.cover || undefined,
+                  originalUrl: articleItem.link,
+                  publishTime: articleItem.update_time 
+                    ? new Date(articleItem.update_time * 1000) 
+                    : new Date(),
+                  author: accountName,
+                });
+              }
+            }
+          }
+        }
+
+        // 检查是否还有更多文章
+        // 如果返回的文章数量少于请求的数量，说明没有更多了
+        hasMore = publishPage.publish_list.length > 0 && begin + count < (publishPage.total_count || 100);
+        begin += count;
+
+        // 添加延迟避免请求过快
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      }
+
+      this.logger.log(`通过微信公众号平台API（已发布）获取 ${articles.length} 篇文章`);
+      return articles;
+    } catch (error) {
+      this.logger.error(`微信公众号平台API（已发布）抓取失败: ${error.message}`);
+      throw error;
+    }
+  }
+
   private async fetchByAPI(
     account: WechatAccount,
     accountName: string,
     wechatToken?: string,
+    userId?: number,
   ): Promise<ArticleData[]> {
     this.logger.log(`[API] 正在获取公众号 "${accountName}" 的文章...`);
 
     // 如果配置了微信公众号平台cookies，使用微信公众号平台API
-    const wechatCookies = process.env.WECHAT_MP_COOKIES;
+    const targetUserId = userId || account.userId || 1;
+    const wechatCookies = await this.settingsService.getWechatCookies(targetUserId);
+    
     if (wechatCookies) {
+      // 优先使用 appmsgpublish 接口
+      try {
+        const articles = await this.fetchByWechatMPPublish(account, accountName, wechatCookies);
+        if (articles && articles.length > 0) {
+          return articles;
+        }
+      } catch (error) {
+        this.logger.warn(`appmsgpublish接口失败，尝试appmsg接口: ${error.message}`);
+      }
+      
+      // 回退到 appmsg 接口
       return this.fetchByWechatMP(accountName, wechatCookies);
     }
 
     if (!wechatToken) {
       this.logger.warn(`未提供微信token，改用爬虫方式`);
-      return this.fetchByCrawl(account, accountName);
+      return this.fetchByCrawl(account, accountName, wechatToken, userId);
     }
 
     try {
@@ -1109,10 +1335,10 @@ export class FetchService {
       // 注意：微信API通常只能获取用户自己创建的公众号的文章
       // 对于其他公众号，仍然需要使用爬虫方式
       this.logger.warn(`微信API方式暂未完全实现，改用爬虫方式`);
-      return this.fetchByCrawl(account, accountName, wechatToken);
+      return this.fetchByCrawl(account, accountName, wechatToken, userId);
     } catch (error) {
       this.logger.error(`API获取失败，改用爬虫方式: ${error.message}`);
-      return this.fetchByCrawl(account, accountName);
+      return this.fetchByCrawl(account, accountName, wechatToken, userId);
     }
   }
 }

@@ -313,7 +313,7 @@ export default function Accounts() {
         width={520}
         okText="确定"
         cancelText="取消"
-        destroyOnClose
+        destroyOnHidden
       >
         <Form
           form={form}

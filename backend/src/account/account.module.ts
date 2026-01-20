@@ -5,9 +5,10 @@ import { AccountController } from './account.controller';
 import { FetchService } from './fetch.service';
 import { WechatAccount } from './entities/account.entity';
 import { ArticleModule } from '../article/article.module';
+import { SettingsModule } from '../settings/settings.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([WechatAccount]), ArticleModule],
+  imports: [TypeOrmModule.forFeature([WechatAccount]), ArticleModule, SettingsModule],
   controllers: [AccountController],
   providers: [AccountService, FetchService],
   exports: [AccountService],

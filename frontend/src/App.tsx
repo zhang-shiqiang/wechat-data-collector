@@ -4,9 +4,9 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
-import Accounts from './pages/Accounts';
+import ContentManagement from './pages/ContentManagement';
 import Categories from './pages/Categories';
-import Articles from './pages/Articles';
+import Settings from './pages/Settings';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuthStore();
@@ -15,7 +15,7 @@ function PrivateRoute({ children }: { children: React.ReactNode }) {
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -27,9 +27,9 @@ function App() {
                 <Routes>
                   <Route path="/" element={<Dashboard />} />
                   <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/accounts" element={<Accounts />} />
-                  <Route path="/articles" element={<Articles />} />
+                  <Route path="/content" element={<ContentManagement />} />
                   <Route path="/categories" element={<Categories />} />
+                  <Route path="/settings" element={<Settings />} />
                 </Routes>
               </Layout>
             </PrivateRoute>

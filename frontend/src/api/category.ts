@@ -9,6 +9,7 @@ export interface Category {
   sortOrder: number;
   accountCount: number;
   articleCount: number;
+  todayArticleCount?: number;
   children?: Category[];
 }
 

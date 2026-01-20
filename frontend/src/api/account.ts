@@ -33,11 +33,13 @@ export interface WechatAccount {
 export interface CreateAccountParams {
   name: string;
   fetchMethod: string;
+  categoryId?: number;
 }
 
 export interface UpdateAccountParams {
   name?: string;
   fetchMethod?: string;
+  categoryId?: number;
 }
 
 export const accountApi = {
