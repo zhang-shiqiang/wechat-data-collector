@@ -481,19 +481,25 @@
 
 .app-content {
   padding: 24px;
-  min-height: calc(100vh - 72px);
+  height: calc(100vh - 72px);
   background: var(--bg-secondary);
   transition: background-color 0.3s ease;
   width: 100%;
   box-sizing: border-box;
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .content-wrapper {
-  padding: 16px 0;
+  padding: 0;
   margin: 0;
   width: 100%;
+  height: 100%;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 /* 响应式设计 */
@@ -516,6 +522,7 @@
   .app-content {
     padding: 16px;
     width: 100%;
+    height: calc(100vh - 72px);
   }
 
   .header-title {

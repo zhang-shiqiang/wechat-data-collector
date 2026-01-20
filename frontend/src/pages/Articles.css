@@ -211,14 +211,57 @@
   color: #ff7875;
 }
 
+[data-theme='dark'] .article-meta .ant-tag-red {
+  background: rgba(255, 77, 79, 0.25);
+  color: #ff7875;
+}
+
 .article-meta .ant-tag-gold {
   background: rgba(250, 173, 20, 0.15);
+  color: #ffc53d;
+}
+
+[data-theme='dark'] .article-meta .ant-tag-gold {
+  background: rgba(250, 173, 20, 0.25);
   color: #ffc53d;
 }
 
 .article-meta .ant-tag-blue {
   background: rgba(102, 126, 234, 0.15);
   color: var(--primary-color);
+}
+
+[data-theme='dark'] .article-meta .ant-tag-blue {
+  background: rgba(102, 126, 234, 0.25);
+  color: var(--primary-color);
+}
+
+/* 文章操作按钮文案颜色 - 兼容黑白背景 */
+.article-actions .ant-btn {
+  color: var(--text-secondary) !important;
+}
+
+.article-actions .ant-btn:hover {
+  color: var(--primary-color) !important;
+}
+
+.article-actions .ant-btn-danger {
+  color: var(--text-secondary) !important;
+}
+
+.article-actions .ant-btn-danger:hover {
+  color: #ff4d4f !important;
+}
+
+/* 文章元信息文案颜色 - 兼容黑白背景 */
+.article-meta .ant-typography,
+.article-meta .ant-typography-secondary,
+.article-meta .anticon {
+  color: var(--text-tertiary) !important;
+}
+
+.article-summary {
+  color: var(--text-secondary) !important;
 }
 
 .articles-pagination {

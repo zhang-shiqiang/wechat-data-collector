@@ -5,6 +5,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  min-height: 0;
 }
 
 .content-management-container .ant-row {
@@ -124,7 +125,26 @@
 .article-title {
   flex: 1;
   margin: 0 !important;
-  color: var(--text-primary);
+  color: var(--text-primary) !important;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.5;
+  transition: color 0.2s ease;
+}
+
+.article-card:hover .article-title {
+  color: var(--primary-color) !important;
+}
+
+/* 确保 Ant Design Title 组件使用正确的颜色 */
+.article-title.ant-typography,
+.article-title.ant-typography h4 {
+  color: var(--text-primary) !important;
+}
+
+.article-card:hover .article-title.ant-typography,
+.article-card:hover .article-title.ant-typography h4 {
+  color: var(--primary-color) !important;
 }
 
 .article-actions {
@@ -156,13 +176,88 @@
   font-size: 14px;
 }
 
+/* 确保树节点的展开/折叠箭头显示 */
+.category-tree-card .ant-tree-switcher {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 24px;
+  height: 36px;
+  line-height: 36px !important;
+  cursor: pointer;
+  color: var(--text-secondary) !important;
+  transition: color 0.2s;
+  flex-shrink: 0;
+  opacity: 1 !important;
+  visibility: visible !important;
+  vertical-align: middle !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.category-tree-card .ant-tree-switcher:hover {
+  color: var(--text-primary) !important;
+}
+
+.category-tree-card .ant-tree-switcher-icon,
+.category-tree-card .ant-tree-switcher-icon svg {
+  font-size: 12px;
+  color: var(--text-secondary) !important;
+  transition: color 0.2s, transform 0.2s;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  vertical-align: middle !important;
+  line-height: 1 !important;
+}
+
+.category-tree-card .ant-tree-switcher:hover .ant-tree-switcher-icon,
+.category-tree-card .ant-tree-switcher:hover .ant-tree-switcher-icon svg {
+  color: var(--text-primary) !important;
+}
+
+/* 确保连接线显示 */
+.category-tree-card .ant-tree-show-line .ant-tree-switcher {
+  display: inline-flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.category-tree-card .ant-tree-show-line .ant-tree-switcher-noop {
+  display: inline-flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* 确保所有节点都显示箭头（即使没有子节点） */
+.category-tree-card .ant-tree-switcher-noop {
+  display: inline-flex !important;
+  opacity: 0.3 !important;
+}
+
+/* 树节点连接线样式 */
+.category-tree-card .ant-tree-show-line .ant-tree-child-tree {
+  position: relative;
+}
+
+/* 确保树节点整体垂直对齐 */
+.category-tree-card .ant-tree-treenode {
+  display: flex !important;
+  align-items: center !important;
+  line-height: 36px !important;
+  min-height: 36px !important;
+  margin-bottom: 0 !important;
+}
 
 .category-tree-card .ant-tree-node-content-wrapper {
-  padding: 10px 12px;
+  padding: 8px 12px;
   border-radius: 6px;
   transition: all 0.2s;
   margin: 2px 0;
-  min-height: 40px;
+  min-height: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   width: 100%;
@@ -178,6 +273,7 @@
 .category-tree-card .ant-tree-child-tree > .ant-tree-node > .ant-tree-node-content-wrapper {
   padding: 8px 12px 8px 24px;
   min-height: 36px;
+  height: 36px;
 }
 
 .category-tree-card .ant-tree-node-content-wrapper:hover {
@@ -258,6 +354,42 @@
 /* 表格样式优化 */
 .content-card .ant-table {
   background: var(--bg-primary);
+}
+
+/* 确保表格展开图标正常显示（箭头样式） */
+.content-card .ant-table-row-expand-icon-cell {
+  width: 0 !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  display: none !important;
+}
+
+.content-card .ant-table-row-expand-icon {
+  display: none !important;
+}
+
+.content-card .ant-table-row-expand-icon:hover {
+  color: var(--primary-color) !important;
+  background: transparent !important;
+}
+
+.content-card .ant-table-row-expand-icon svg {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  width: 12px;
+  height: 12px;
+  color: inherit;
+}
+
+.content-card .ant-table-row-expand-icon .anticon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  font-size: 12px;
+  color: inherit;
 }
 
 .content-card .ant-table-thead > tr > th {
@@ -768,4 +900,129 @@
     width: 100%;
     margin: 0;
   }
+}
+
+/* 预览文章对话框特殊样式 - 铺满可用空间 */
+.preview-articles-modal .ant-modal-content {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 40px);
+}
+
+.preview-articles-modal .ant-modal-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  padding: 20px;
+}
+
+.preview-articles-modal .ant-modal-body > div {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.preview-articles-modal .ant-modal-body > div > div:last-child {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+/* AutoComplete 组件样式 - 兼容黑白背景 */
+.ant-select-dropdown,
+.ant-auto-complete-dropdown {
+  background: var(--bg-primary) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px var(--shadow-color) !important;
+}
+
+.ant-select-item,
+.ant-auto-complete-option {
+  color: var(--text-primary) !important;
+  background: var(--bg-primary) !important;
+}
+
+.ant-select-item:hover,
+.ant-auto-complete-option:hover {
+  background: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+}
+
+.ant-select-item-option-selected,
+.ant-auto-complete-option-selected {
+  background: rgba(102, 126, 234, 0.1) !important;
+  color: var(--primary-color) !important;
+}
+
+.ant-select-empty,
+.ant-auto-complete-empty {
+  color: var(--text-secondary) !important;
+  background: var(--bg-primary) !important;
+}
+
+/* Modal 模态框文字颜色 - 兼容黑白背景 */
+.ant-modal {
+  color: var(--text-primary) !important;
+}
+
+.ant-modal-header {
+  background: var(--bg-primary) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.ant-modal-title {
+  color: var(--text-primary) !important;
+}
+
+.ant-modal-close {
+  color: var(--text-secondary) !important;
+}
+
+.ant-modal-close:hover {
+  color: var(--text-primary) !important;
+}
+
+.ant-modal-body {
+  background: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+.ant-modal-footer {
+  background: var(--bg-primary) !important;
+  border-top: 1px solid var(--border-color) !important;
+}
+
+/* Form 表单文字颜色 - 兼容黑白背景 */
+.ant-form-item-label > label {
+  color: var(--text-primary) !important;
+}
+
+.ant-form-item-extra {
+  color: var(--text-secondary) !important;
+}
+
+.ant-form-item-explain-error {
+  color: #ff4d4f !important;
+}
+
+/* Input 输入框文字颜色 - 兼容黑白背景 */
+.ant-input,
+.ant-input-affix-wrapper .ant-input {
+  color: var(--text-primary) !important;
+  background: var(--bg-primary) !important;
+}
+
+.ant-input::placeholder,
+.ant-input-affix-wrapper .ant-input::placeholder {
+  color: var(--text-tertiary) !important;
+}
+
+/* AutoComplete 下拉选项中的文字 */
+.ant-auto-complete-option-content,
+.ant-select-item-option-content {
+  color: var(--text-primary) !important;
 }

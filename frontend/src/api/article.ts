@@ -62,5 +62,6 @@ export const articleApi = {
   updateProgress: (id: number, progress: number) =>
     request.put<Article>(`/articles/${id}/progress`, { progress }),
   delete: (id: number) => request.delete(`/articles/${id}`),
+  clearAll: () => request.delete('/articles/all/clear'),
 };
 

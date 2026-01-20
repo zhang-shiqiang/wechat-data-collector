@@ -200,11 +200,62 @@ export class AccountController {
     };
   }
 
+  @Delete('all/clear')
+  async deleteAll(@Request() req) {
+    const userId = req.user?.id || 1; // TODO: 从JWT获取用户ID
+    const deletedCount = await this.accountService.deleteAll(userId);
+    return {
+      code: 200,
+      message: `成功清空 ${deletedCount} 个公众号`,
+      data: { deletedCount },
+    };
+  }
+
+  @Post(':id/preview')
+  async preview(
+    @Request() req,
+    @Param('id') id: string,
+    @Body() body?: { accountName?: string; fakeid?: string; query?: string; limit?: number },
+  ) {
+    const userId = req.user?.id || 1; // TODO: 从JWT获取用户ID
+    const account = await this.accountService.findOne(+id, userId);
+    
+    // 使用传入的 accountName 或使用公众号名称
+    const accountName = body?.accountName || account.name;
+    // 使用传入的 fakeid 或使用账号中保存的 fakeid
+    const fakeid = body?.fakeid || account.fakeid;
+    const query = body?.query || '';
+    const limit = body?.limit; // 前端传入的限制数量
+
+    try {
+      const result = await this.fetchService.previewArticles(
+        account,
+        accountName,
+        userId,
+        fakeid,
+        query,
+        limit,
+      );
+
+      return {
+        code: 200,
+        message: '预览成功',
+        data: result,
+      };
+    } catch (error) {
+      return {
+        code: 500,
+        message: `预览失败: ${error.message}`,
+        data: null,
+      };
+    }
+  }
+
   @Post(':id/fetch')
   async fetch(
     @Request() req,
     @Param('id') id: string,
-    @Body() body?: { accountName?: string; wechatToken?: string },
+    @Body() body?: { accountName?: string; wechatToken?: string; fakeid?: string; query?: string; limit?: number },
   ) {
     const userId = req.user?.id || 1; // TODO: 从JWT获取用户ID
     const account = await this.accountService.findOne(+id, userId);
@@ -212,6 +263,10 @@ export class AccountController {
     // 使用传入的 accountName 或使用公众号名称
     const accountName = body?.accountName || account.name;
     const wechatToken = body?.wechatToken;
+    // 使用传入的 fakeid 或使用账号中保存的 fakeid
+    const fakeid = body?.fakeid || account.fakeid;
+    const query = body?.query || '';
+    const limit = body?.limit; // 前端传入的限制数量
 
     try {
       // 根据抓取方式获取文章列表
@@ -220,20 +275,28 @@ export class AccountController {
         accountName,
         wechatToken,
         userId,
+        fakeid,
+        query,
+        limit,
       );
 
       // 更新公众号的文章统计
       await this.accountService.updateArticleStats(account.id, userId);
 
+      const message = result.skipped > 0
+        ? `成功加载 ${result.success} 篇文章，跳过 ${result.skipped} 篇已存在的文章`
+        : `成功加载 ${result.success} 篇文章`;
+      
       return {
         code: 200,
-        message: `成功加载 ${result.success} 篇文章`,
+        message,
         data: {
           accountId: account.id,
           accountName: account.name,
           fetchMethod: account.fetchMethod,
           success: result.success,
           failed: result.failed,
+          skipped: result.skipped,
           total: result.articles.length,
           articles: result.articles.map((article) => ({
             id: article.id,

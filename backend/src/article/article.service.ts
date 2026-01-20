@@ -228,5 +228,41 @@ export class ArticleService {
     const article = await this.findOne(id, userId);
     await this.articleRepository.remove(article);
   }
+
+  /**
+   * 清空所有文章数据
+   */
+  async deleteAll(userId: number): Promise<number> {
+    const result = await this.articleRepository.delete({ userId });
+    return result.affected || 0;
+  }
+
+  /**
+   * 批量查找已存在的文章（根据 originalUrl 列表）
+   */
+  async findExistingByUrls(
+    originalUrls: string[],
+    accountId?: number,
+  ): Promise<Map<string, Article>> {
+    if (originalUrls.length === 0) {
+      return new Map();
+    }
+
+    const queryBuilder = this.articleRepository
+      .createQueryBuilder('article')
+      .where('article.originalUrl IN (:...urls)', { urls: originalUrls });
+
+    if (accountId !== undefined) {
+      queryBuilder.andWhere('article.accountId = :accountId', { accountId });
+    }
+
+    const existingArticles = await queryBuilder.getMany();
+    const urlMap = new Map<string, Article>();
+    existingArticles.forEach((article) => {
+      urlMap.set(article.originalUrl, article);
+    });
+
+    return urlMap;
+  }
 }
 

@@ -13,5 +13,9 @@ export class UpdateAccountDto {
   @IsOptional()
   @IsIn(['rss', 'crawl', 'api'], { message: '抓取方式必须是 rss、crawl 或 api' })
   fetchMethod?: string;
+
+  @IsString()
+  @IsOptional()
+  fakeid?: string;
 }
 

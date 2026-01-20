@@ -73,6 +73,14 @@ export class AccountService {
   }
 
   /**
+   * 清空所有公众号数据
+   */
+  async deleteAll(userId: number): Promise<number> {
+    const result = await this.accountRepository.delete({ userId });
+    return result.affected || 0;
+  }
+
+  /**
    * 更新公众号的文章统计
    */
   async updateArticleStats(accountId: number, userId: number): Promise<void> {

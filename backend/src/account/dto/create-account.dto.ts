@@ -21,5 +21,9 @@ export class CreateAccountDto {
   @IsNumber()
   @Type(() => Number)
   categoryId?: number;
+
+  @IsOptional()
+  @IsString()
+  fakeid?: string;
 }
 

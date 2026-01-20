@@ -5,6 +5,7 @@ export interface WechatAccount {
   name: string;
   alias?: string;
   wechatId?: string;
+  fakeid?: string;
   avatar?: string;
   description?: string;
   categoryId?: number;
@@ -34,12 +35,25 @@ export interface CreateAccountParams {
   name: string;
   fetchMethod: string;
   categoryId?: number;
+  fakeid?: string;
 }
 
 export interface UpdateAccountParams {
   name?: string;
   fetchMethod?: string;
   categoryId?: number;
+}
+
+export interface PreviewArticlesResponse {
+  total: number;
+  newArticles: number;
+  existingArticles: number;
+  articles: Array<{
+    title: string;
+    publishTime: Date;
+    originalUrl: string;
+    isExisting?: boolean;
+  }>;
 }
 
 export const accountApi = {
@@ -51,7 +65,10 @@ export const accountApi = {
     request.patch<WechatAccount>(`/accounts/${id}`, params),
   delete: (id: number) => request.delete(`/accounts/${id}`),
   batchDelete: (ids: number[]) => request.post('/accounts/batch-delete', { ids }),
-  fetch: (id: number, params?: { accountName?: string }) => request.post(`/accounts/${id}/fetch`, params),
+  clearAll: () => request.delete('/accounts/all/clear'),
+  preview: (id: number, params?: { accountName?: string; fakeid?: string; query?: string; limit?: number }) =>
+    request.post<PreviewArticlesResponse>(`/accounts/${id}/preview`, params),
+  fetch: (id: number, params?: { accountName?: string; fakeid?: string; query?: string; limit?: number }) => request.post(`/accounts/${id}/fetch`, params),
   fetchByUrl: (params: { url: string; accountId?: number; categoryId?: number }) =>
     request.post('/accounts/fetch-by-url', params),
 };

@@ -157,6 +157,22 @@ export default function Articles() {
         <Title level={2} style={{ color: 'var(--text-primary)', margin: 0 }}>
           文章列表
         </Title>
+        <Popconfirm
+          title="确定要清空所有文章数据吗？此操作不可恢复！"
+          onConfirm={async () => {
+            try {
+              await articleApi.clearAll();
+              message.success('清空成功');
+              loadArticles();
+            } catch (error: any) {
+              message.error(error.message || '清空失败');
+            }
+          }}
+        >
+          <Button type="default" danger>
+            清空所有文章
+          </Button>
+        </Popconfirm>
       </div>
 
       <Card className="articles-filter-card">
@@ -268,22 +284,7 @@ export default function Articles() {
                 }}
               >
                 <Row gutter={16}>
-                  {article.coverImage && (
-                    <Col xs={24} sm={6} md={4}>
-                      <Image
-                        src={article.coverImage}
-                        alt={article.title}
-                        style={{
-                          width: '100%',
-                          height: 120,
-                          objectFit: 'cover',
-                          borderRadius: 8,
-                        }}
-                        preview={false}
-                      />
-                    </Col>
-                  )}
-                  <Col xs={24} sm={article.coverImage ? 18 : 24} md={article.coverImage ? 20 : 24}>
+                  <Col xs={24}>
                     <div className="article-content">
                       <div className="article-header">
                         <Title level={4} className="article-title">

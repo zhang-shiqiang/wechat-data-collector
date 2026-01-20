@@ -265,6 +265,22 @@ export default function Accounts() {
           >
             根据链接抓取
           </Button>
+          <Popconfirm
+            title="确定要清空所有公众号数据吗？此操作不可恢复！"
+            onConfirm={async () => {
+              try {
+                await accountApi.clearAll();
+                message.success('清空成功');
+                loadAccounts();
+              } catch (error: any) {
+                message.error(error.message || '清空失败');
+              }
+            }}
+          >
+            <Button type="default" danger>
+              清空所有公众号
+            </Button>
+          </Popconfirm>
           <Button
             type="primary"
             icon={<PlusOutlined />}

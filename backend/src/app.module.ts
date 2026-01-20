@@ -7,6 +7,7 @@ import { AccountModule } from './account/account.module';
 import { ArticleModule } from './article/article.module';
 import { AuthModule } from './auth/auth.module';
 import { SettingsModule } from './settings/settings.module';
+import { StatisticsModule } from './statistics/statistics.module';
 import { User } from './user/entities/user.entity';
 import { Category } from './category/entities/category.entity';
 import { WechatAccount } from './account/entities/account.entity';
@@ -29,7 +30,7 @@ import { Article } from './article/entities/article.entity';
         database: 'testdb',
         synchronize: true,
         entities: [User, Category, WechatAccount, Article],
-        logging: true,
+        logging: false, // 关闭 SQL 日志
       }),
     }),
     UserModule,
@@ -38,6 +39,7 @@ import { Article } from './article/entities/article.entity';
     ArticleModule,
     AuthModule,
     SettingsModule,
+    StatisticsModule,
   ],
   controllers: [],
   providers: [],

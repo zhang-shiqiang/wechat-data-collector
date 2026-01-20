@@ -32,6 +32,9 @@ export class WechatAccount {
   wechatId: string;
 
   @Column({ nullable: true })
+  fakeid: string;
+
+  @Column({ nullable: true })
   avatar: string;
 
   @Column({ type: 'text', nullable: true })

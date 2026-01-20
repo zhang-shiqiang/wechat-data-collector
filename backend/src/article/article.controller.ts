@@ -136,5 +136,16 @@ export class ArticleController {
       message: '删除成功',
     };
   }
+
+  @Delete('all/clear')
+  async deleteAll(@Request() req) {
+    const userId = req.user?.id || 1; // TODO: 从JWT获取用户ID
+    const deletedCount = await this.articleService.deleteAll(userId);
+    return {
+      code: 200,
+      message: `成功清空 ${deletedCount} 篇文章`,
+      data: { deletedCount },
+    };
+  }
 }
 
