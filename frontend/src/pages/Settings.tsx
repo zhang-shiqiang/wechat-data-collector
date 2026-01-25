@@ -6,7 +6,6 @@ import {
   Input,
   message,
   Typography,
-  Space,
 } from 'antd';
 import {
   SaveOutlined,
@@ -28,7 +27,7 @@ export default function Settings() {
 
   const loadCookies = async () => {
     try {
-      const data = await request.get('/settings/wechat-cookies');
+      const data = await request.get<{ cookies: string }>('/settings/wechat-cookies');
       // 如果返回了cookies（包括默认值），就显示在输入框中
       if (data && data.cookies) {
         form.setFieldsValue({ cookies: data.cookies });

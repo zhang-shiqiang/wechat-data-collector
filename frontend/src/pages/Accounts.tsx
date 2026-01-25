@@ -21,11 +21,10 @@ import {
   EditOutlined,
   DeleteOutlined,
   AppstoreOutlined,
-  ReloadOutlined,
   SearchOutlined,
   LinkOutlined,
 } from '@ant-design/icons';
-import { accountApi, WechatAccount, CreateAccountParams } from '../api/account';
+import { accountApi, WechatAccount } from '../api/account';
 import request from '../api/request';
 import './Accounts.css';
 
@@ -42,7 +41,6 @@ export default function Accounts() {
   const [urlFetching, setUrlFetching] = useState(false);
   const [urlForm] = Form.useForm();
   const [searching, setSearching] = useState(false);
-  const [searchResults, setSearchResults] = useState<any[]>([]);
   const [searchOptions, setSearchOptions] = useState<any[]>([]);
 
   useEffect(() => {
@@ -52,8 +50,8 @@ export default function Accounts() {
   const loadAccounts = async () => {
     setLoading(true);
     try {
-      const data = await accountApi.getList();
-      setAccounts(data);
+      const accounts = await accountApi.getList();
+      setAccounts(accounts);
     } catch (error: any) {
       message.error(error.message || '加载失败');
     } finally {
@@ -319,12 +317,11 @@ export default function Accounts() {
       <Modal
         title={editingAccount ? '编辑公众号' : '添加公众号'}
         open={modalVisible}
-        onCancel={() => {
-          setModalVisible(false);
-          form.resetFields();
-          setSearchResults([]);
-          setSearchOptions([]);
-        }}
+          onCancel={() => {
+            setModalVisible(false);
+            form.resetFields();
+            setSearchOptions([]);
+          }}
         onOk={() => form.submit()}
         width={520}
         okText="确定"
@@ -346,22 +343,19 @@ export default function Accounts() {
               size="large"
               placeholder="请输入公众号名称，例如：Vue中文社区"
               options={searchOptions}
-              loading={searching}
               onSearch={async (value) => {
                 if (!value || value.trim() === '') {
                   setSearchOptions([]);
-                  setSearchResults([]);
                   return;
                 }
                 
                 setSearching(true);
                 try {
-                  const response = await request.get('/accounts/search', {
+                  const data = await request.get<{ list: any[] }>('/accounts/search', {
                     params: { query: value.trim() },
                   });
-                  if (response && response.list && response.list.length > 0) {
-                    setSearchResults(response.list);
-                    const options = response.list.map((item: any) => ({
+                  if (data && data.list && data.list.length > 0) {
+                    const options = data.list.map((item: any) => ({
                       value: item.nickname || item.name,
                       label: (
                         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -394,18 +388,16 @@ export default function Accounts() {
                     setSearchOptions(options);
                   } else {
                     setSearchOptions([]);
-                    setSearchResults([]);
                   }
                 } catch (error: any) {
                   const errorMsg = error.response?.data?.message || error.message || '搜索失败';
                   message.error(errorMsg);
                   setSearchOptions([]);
-                  setSearchResults([]);
                 } finally {
                   setSearching(false);
                 }
               }}
-              onSelect={(value, option: any) => {
+              onSelect={(value) => {
                 // 选择后，可以保存完整的item信息到表单（如果需要）
                 form.setFieldsValue({ name: value });
               }}

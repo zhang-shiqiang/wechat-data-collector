@@ -24,9 +24,9 @@ export default function Register() {
     try {
       // 移除 confirm 字段，只发送后端需要的字段
       const { confirm, ...registerData } = values;
-      const data = await authApi.register(registerData);
-      setUser(data);
-      setToken('mock-token'); // TODO: 实现JWT后使用真实token
+      const userData = await authApi.register(registerData);
+      setUser(userData);
+      setToken(`mock-token-${userData?.id || Date.now()}`); // TODO: 实现JWT后使用真实token
       message.success('注册成功');
       navigate('/dashboard');
     } catch (error: any) {

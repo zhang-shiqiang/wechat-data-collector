@@ -29,17 +29,27 @@ export default function Login() {
     } else if (token && wechat === '1') {
       // 微信登录成功
       setToken(token);
+      // 获取用户信息（authApi 返回的已经是 data）
+      authApi.getProfile().then((userData: any) => {
+        if (userData) {
+          setUser(userData);
+        }
+      }).catch(() => {
+        // 如果获取用户信息失败，仍然可以登录（因为已经设置了token和isAuthenticated）
+      });
       message.success('微信登录成功');
       navigate('/dashboard');
     }
-  }, [searchParams, navigate, setToken]);
+  }, [searchParams, navigate, setToken, setUser]);
 
   const onFinish = async (values: { username: string; password: string }) => {
     setLoading(true);
     try {
-      const data = await authApi.login(values);
-      setUser(data);
-      setToken('mock-token'); // TODO: 实现JWT后使用真实token
+      // authApi.login 返回的已经是 data，不需要再访问 .data
+      const userData = await authApi.login(values);
+      setUser(userData);
+      // TODO: 实现JWT后使用真实token，目前使用用户ID作为mock token
+      setToken(`mock-token-${userData?.id || Date.now()}`);
       message.success('登录成功');
       navigate('/dashboard');
     } catch (error: any) {

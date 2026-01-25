@@ -13,8 +13,6 @@ import {
 import {
   DashboardOutlined,
   AppstoreOutlined,
-  FileTextOutlined,
-  SettingOutlined,
   LogoutOutlined,
   UserOutlined,
   MenuFoldOutlined,
@@ -58,11 +56,6 @@ export default function Layout({ children }: LayoutProps) {
       key: '/content',
       icon: <AppstoreOutlined />,
       label: '内容管理',
-    },
-    {
-      key: '/settings',
-      icon: <SettingOutlined />,
-      label: '设置',
     },
   ];
 

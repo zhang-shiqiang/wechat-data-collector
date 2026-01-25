@@ -56,6 +56,12 @@ export interface PreviewArticlesResponse {
   }>;
 }
 
+export interface FetchByUrlResponse {
+  isNew: boolean;
+  article?: any;
+  message?: string;
+}
+
 export const accountApi = {
   getList: (categoryId?: number) =>
     request.get<WechatAccount[]>('/accounts', { params: { categoryId } }),
@@ -70,6 +76,6 @@ export const accountApi = {
     request.post<PreviewArticlesResponse>(`/accounts/${id}/preview`, params),
   fetch: (id: number, params?: { accountName?: string; fakeid?: string; query?: string; limit?: number }) => request.post(`/accounts/${id}/fetch`, params),
   fetchByUrl: (params: { url: string; accountId?: number; categoryId?: number }) =>
-    request.post('/accounts/fetch-by-url', params),
+    request.post<FetchByUrlResponse>('/accounts/fetch-by-url', params),
 };
 

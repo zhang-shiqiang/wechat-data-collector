@@ -7,7 +7,6 @@ import {
   Space,
   Tag,
   Typography,
-  Image,
   Empty,
   Pagination,
   Row,
@@ -61,13 +60,13 @@ export default function Articles() {
   const loadArticles = async () => {
     setLoading(true);
     try {
-      const response = await articleApi.getList({
+      const data = await articleApi.getList({
         ...filters,
         page,
         pageSize,
       });
-      setArticles(response.articles);
-      setTotal(response.total);
+      setArticles(data.articles);
+      setTotal(data.total);
     } catch (error: any) {
       message.error(error.message || '加载失败');
     } finally {
@@ -77,8 +76,8 @@ export default function Articles() {
 
   const loadAccounts = async () => {
     try {
-      const data = await accountApi.getList();
-      setAccounts(data);
+      const accounts = await accountApi.getList();
+      setAccounts(accounts);
     } catch (error) {
       console.error('加载公众号失败', error);
     }
@@ -86,8 +85,8 @@ export default function Articles() {
 
   const loadCategories = async () => {
     try {
-      const data = await categoryApi.getList();
-      setCategories(data);
+      const categories = await categoryApi.getList();
+      setCategories(categories);
     } catch (error) {
       console.error('加载分类失败', error);
     }
@@ -331,7 +330,6 @@ export default function Articles() {
                               e?.stopPropagation();
                               handleDelete(article.id);
                             }}
-                            onClick={(e) => e.stopPropagation()}
                           >
                             <Button
                               type="text"
@@ -346,9 +344,16 @@ export default function Articles() {
                         </Space>
                       </div>
                       {article.summary && (
-                        <Text className="article-summary" ellipsis={{ rows: 2 }}>
+                        <div className="article-summary" style={{ 
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical',
+                          color: 'var(--text-secondary)'
+                        }}>
                           {article.summary}
-                        </Text>
+                        </div>
                       )}
                       <div className="article-meta">
                         <Space size="middle">
@@ -403,7 +408,7 @@ export default function Articles() {
                 setPage(page);
                 setPageSize(pageSize);
               }}
-              onShowSizeChange={(current, size) => {
+              onShowSizeChange={(_current, size) => {
                 setPage(1);
                 setPageSize(size);
               }}

@@ -75,9 +75,6 @@ export default function ContentManagement() {
   const [urlForm] = Form.useForm();
   const [searching, setSearching] = useState(false);
   const [searchOptions, setSearchOptions] = useState<any[]>([]);
-  const [accountArticlesMap, setAccountArticlesMap] = useState<Map<number, Article[]>>(new Map());
-  const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
-  const [loadingArticles, setLoadingArticles] = useState<Set<number>>(new Set());
 
   // 文章相关
   const [articles, setArticles] = useState<Article[]>([]);
@@ -150,8 +147,8 @@ export default function ContentManagement() {
   // 加载分类树
   const loadCategoryTree = async () => {
     try {
-      const data = await categoryApi.getTree();
-      const tree = buildCategoryTree(data);
+      const categories = await categoryApi.getTree();
+      const tree = buildCategoryTree(categories);
       setCategoryTree(tree);
     } catch (error: any) {
       message.error(error.message || '加载分类失败');
@@ -161,7 +158,6 @@ export default function ContentManagement() {
   // 构建分类树（递归处理所有层级）
   const buildCategoryTree = (categories: Category[]): CategoryNode[] => {
     const map = new Map<number, CategoryNode>();
-    const roots: CategoryNode[] = [];
 
     // 创建所有节点
     categories.forEach((cat) => {
@@ -195,45 +191,12 @@ export default function ContentManagement() {
     const targetCategoryId = categoryId !== undefined ? categoryId : selectedCategoryId;
     setAccountsLoading(true);
     try {
-      const data = await accountApi.getList(targetCategoryId);
-      setAccounts(data);
-      // 清空文章映射，等待展开时加载
-      setAccountArticlesMap(new Map());
+      const accounts = await accountApi.getList(targetCategoryId);
+      setAccounts(accounts);
     } catch (error: any) {
       message.error(error.message || '加载失败');
     } finally {
       setAccountsLoading(false);
-    }
-  };
-
-  // 加载指定公众号的文章
-  const loadAccountArticles = async (accountId: number, accountName: string, fakeid?: string) => {
-    if (accountArticlesMap.has(accountId)) {
-      return; // 已经加载过，不重复加载
-    }
-
-    setLoadingArticles(prev => new Set(prev).add(accountId));
-    try {
-      const response = await articleApi.getList({
-        accountName: accountName,
-        fakeid: fakeid,
-        page: 1,
-        pageSize: 50, // 加载更多文章用于展示
-      });
-      const articles = (response as any).data?.articles || (response as any).articles || [];
-      setAccountArticlesMap(prev => {
-        const newMap = new Map(prev);
-        newMap.set(accountId, articles);
-        return newMap;
-      });
-    } catch (error: any) {
-      console.error(`加载公众号 ${accountName} 的文章失败:`, error);
-    } finally {
-      setLoadingArticles(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(accountId);
-        return newSet;
-      });
     }
   };
 
@@ -242,14 +205,14 @@ export default function ContentManagement() {
     const targetCategoryId = categoryId !== undefined ? categoryId : selectedCategoryId;
     setArticlesLoading(true);
     try {
-      const response = await articleApi.getList({
+      const data = await articleApi.getList({
         ...articleFilters,
         categoryId: targetCategoryId,
         page: articlesPage,
         pageSize: articlesPageSize,
       });
-      setArticles(response.articles);
-      setArticlesTotal(response.total);
+      setArticles(data.articles);
+      setArticlesTotal(data.total);
     } catch (error: any) {
       message.error(error.message || '加载失败');
     } finally {
@@ -258,7 +221,7 @@ export default function ContentManagement() {
   };
 
   // 处理分类选择
-  const handleCategorySelect = (selectedKeys: React.Key[], info: any) => {
+  const handleCategorySelect = (selectedKeys: React.Key[]) => {
     if (selectedKeys.length > 0) {
       const categoryId = parseInt(selectedKeys[0].toString().replace('category-', ''));
 
@@ -369,21 +332,19 @@ export default function ContentManagement() {
     fakeid?: string;
     preview?: any;
   } | null>(null);
-  const [previewLoading, setPreviewLoading] = useState(false);
 
   const handleFetchAccount = async (id: number, accountName: string, fakeid?: string) => {
     setFetching(id);
-    setPreviewLoading(true);
     try {
       message.loading({ content: `正在查询 "${accountName}" 的可导入文章...`, key: 'preview', duration: 0 });
       const response = await accountApi.preview(id, { accountName, fakeid });
       // request 拦截器已经返回了 data，所以 response 直接就是数据对象
       
       // 如果所有文章都已存在，直接提示用户，不显示弹窗
-      if ((response as any).newArticles === 0) {
+      if (response.newArticles === 0) {
         message.destroy('preview');
         message.info({
-          content: `暂无可导入文章，所有 ${(response as any).total} 篇文章均已存在`,
+          content: `暂无可导入文章，所有 ${response.total} 篇文章均已存在`,
           duration: 3,
         });
         return;
@@ -393,7 +354,7 @@ export default function ContentManagement() {
         accountId: id,
         accountName,
         fakeid,
-        preview: response,
+        preview: (response as any).data,
       });
       setPreviewModalVisible(true);
       message.destroy('preview');
@@ -401,7 +362,6 @@ export default function ContentManagement() {
       message.error({ content: error.message || '查询失败，请检查公众号名称是否正确', key: 'preview' });
     } finally {
       setFetching(null);
-      setPreviewLoading(false);
     }
   };
 
@@ -951,7 +911,6 @@ export default function ContentManagement() {
                                               e?.stopPropagation();
                                               handleDeleteArticle(article.id);
                                             }}
-                                            onClick={(e) => e.stopPropagation()}
                                           >
                                             <Button
                                               type="text"
@@ -966,9 +925,16 @@ export default function ContentManagement() {
                                         </Space>
                                       </div>
                                       {article.summary && (
-                                        <Text className="article-summary" ellipsis={{ rows: 2 }}>
+                                        <div className="article-summary" style={{ 
+                                          overflow: 'hidden',
+                                          textOverflow: 'ellipsis',
+                                          display: '-webkit-box',
+                                          WebkitLineClamp: 2,
+                                          WebkitBoxOrient: 'vertical',
+                                          color: 'var(--text-secondary)'
+                                        }}>
                                           {article.summary}
-                                        </Text>
+                                        </div>
                                       )}
                                       <div className="article-meta">
                                         <Space size="middle">
@@ -1023,7 +989,7 @@ export default function ContentManagement() {
                                 setArticlesPage(page);
                                 setArticlesPageSize(pageSize);
                               }}
-                              onShowSizeChange={(current, size) => {
+                              onShowSizeChange={(_current, size) => {
                                 setArticlesPage(1);
                                 setArticlesPageSize(size);
                               }}
@@ -1074,7 +1040,6 @@ export default function ContentManagement() {
               size="large"
               placeholder="请输入公众号名称，例如：Vue中文社区"
               options={searchOptions}
-              loading={searching}
               onSearch={async (value) => {
                 if (!value || value.trim() === '') {
                   setSearchOptions([]);
@@ -1083,11 +1048,11 @@ export default function ContentManagement() {
 
                 setSearching(true);
                 try {
-                  const response = await request.get('/accounts/search', {
+                  const data = await request.get<{ list: any[] }>('/accounts/search', {
                     params: { query: value.trim() },
                   });
-                  if (response && response.list && response.list.length > 0) {
-                    const options = response.list.map((item: any) => ({
+                  if (data && data.list && data.list.length > 0) {
+                    const options = data.list.map((item: any) => ({
                       value: item.nickname || item.name,
                       fakeid: item.fakeid,
                       label: (

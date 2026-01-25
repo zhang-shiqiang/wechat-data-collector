@@ -1211,7 +1211,8 @@ export class FetchService {
       this.logger.log(`使用 fakeid: ${finalFakeid} 查询文章`);
 
       // 第二步：使用 appmsgpublish 接口获取已发布文章
-      const token = 1516911756;
+      // 从 settingsService 获取写死的 token
+      const token = await this.settingsService.getWechatToken(account.userId || 1);
       const fingerprint = this.extractFingerprintFromCookies(cookies);
       const articles: ArticleData[] = [];
       let begin = 0;

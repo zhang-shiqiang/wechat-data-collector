@@ -1,14 +1,30 @@
-import axios from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { message } from 'antd';
 import { useAuthStore } from '../stores/authStore';
 
-const request = axios.create({
+// 后端统一响应格式
+interface ApiResponse<T = any> {
+  code: number;
+  message: string;
+  data: T;
+}
+
+// 创建自定义请求实例类型
+interface CustomAxiosInstance extends AxiosInstance {
+  get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T>;
+  post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T>;
+  put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T>;
+  delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<T>;
+  patch<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T>;
+}
+
+const axiosInstance = axios.create({
   baseURL: '/api',
   timeout: 60000, // 超时时间60秒
 });
 
 // 请求拦截器
-request.interceptors.request.use(
+axiosInstance.interceptors.request.use(
   (config) => {
     const token = useAuthStore.getState().token;
     if (token) {
@@ -22,9 +38,9 @@ request.interceptors.request.use(
 );
 
 // 响应拦截器
-request.interceptors.response.use(
+axiosInstance.interceptors.response.use(
   (response) => {
-    const { code, message: msg, data } = response.data;
+    const { code, message: msg, data } = response.data as ApiResponse;
     if (code === 200) {
       return data;
     } else {
@@ -41,6 +57,8 @@ request.interceptors.response.use(
     return Promise.reject(error);
   },
 );
+
+const request = axiosInstance as CustomAxiosInstance;
 
 export default request;
 

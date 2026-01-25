@@ -6,7 +6,6 @@ import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import ContentManagement from './pages/ContentManagement';
 import Categories from './pages/Categories';
-import Settings from './pages/Settings';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuthStore();
@@ -29,7 +28,6 @@ function App() {
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/content" element={<ContentManagement />} />
                   <Route path="/categories" element={<Categories />} />
-                  <Route path="/settings" element={<Settings />} />
                 </Routes>
               </Layout>
             </PrivateRoute>

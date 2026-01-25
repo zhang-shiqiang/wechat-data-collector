@@ -35,11 +35,11 @@ export default function WechatLogin({ visible, onCancel, onSuccess }: WechatLogi
       // 例如：如果授权回调域名配置为 localhost:3000，则回调地址为 http://localhost:3000/api/wechat/callback
       const backendUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
       const redirectUri = `${backendUrl}/api/wechat/callback`;
-      const response = await request.get('/wechat/qrcode', {
+      const data = await request.get<{ qrCodeUrl: string }>('/wechat/qrcode', {
         params: { redirectUri },
       });
       // request 拦截器已经提取了 data，所以直接使用
-      setQrCodeUrl(response.qrCodeUrl);
+      setQrCodeUrl(data.qrCodeUrl);
     } catch (error: any) {
       console.error('获取二维码失败:', error);
       const errorMsg = error.message || '未知错误';
